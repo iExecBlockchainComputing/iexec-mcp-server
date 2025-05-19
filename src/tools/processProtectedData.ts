@@ -1,0 +1,90 @@
+import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
+import { Wallet } from "ethers";
+import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
+
+export const processProtectedData = {
+    name: "process_protected_data",
+    description: "Process a protected dataset using iExec confidential computing",
+    inputSchema: {
+        type: "object",
+        properties: {
+            protectedData: { type: "string" }, // required
+            app: { type: "string" },           // required
+
+            // optionnels
+            userWhitelist: { type: "string" },
+            maxPrice: { type: "number" },
+            path: { type: "string" },
+            args: { type: "string" },
+            inputFiles: {
+                type: "array",
+                items: { type: "string" },
+            },
+            secrets: {
+                type: "object",
+                additionalProperties: { type: "string" },
+            },
+            workerpool: { type: "string" },
+            useVoucher: { type: "boolean" },
+            voucherOwner: { type: "string" },
+            privateKey: { type: "string" }, // required for signing and provider
+        },
+        required: ["protectedData", "app", "privateKey"],
+    },
+    handler: async (params: any) => {
+        const {
+            protectedData,
+            app,
+            userWhitelist,
+            maxPrice,
+            path,
+            args,
+            inputFiles,
+            secrets,
+            workerpool,
+            useVoucher,
+            voucherOwner,
+            privateKey,
+        } = params;
+
+        // Validation minimale des requis
+        if (
+            typeof protectedData !== "string" ||
+            typeof app !== "string" ||
+            typeof privateKey !== "string"
+        ) {
+            throw new McpError(ErrorCode.InvalidParams, "Missing required parameters");
+        }
+
+        try {
+            const signer = new Wallet(privateKey);
+            const web3Provider = getWeb3Provider(signer.privateKey);
+            const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
+
+            // Construire l'objet d'appel en ne mettant que les params définis
+            const processParams: any = {
+                protectedData,
+                app,
+            };
+
+            if (userWhitelist) processParams.userWhitelist = userWhitelist;
+            if (typeof maxPrice === "number") processParams.maxPrice = maxPrice;
+            if (path) processParams.path = path;
+            if (args) processParams.args = args;
+            if (inputFiles) processParams.inputFiles = inputFiles;
+            if (secrets) processParams.secrets = secrets;
+            if (workerpool) processParams.workerpool = workerpool;
+            if (typeof useVoucher === "boolean") processParams.useVoucher = useVoucher;
+            if (voucherOwner) processParams.voucherOwner = voucherOwner;
+
+            const result = await dataProtectorCore.processProtectedData(processParams);
+
+            return {
+                message: "Protected data processed successfully",
+                txHash: result.txHash,
+            };
+        } catch (error: any) {
+            throw new McpError(ErrorCode.InternalError, error.message);
+        }
+    },
+};
