@@ -1,5 +1,5 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import { getIexecProvider } from "../utils/provider.js";
+import { getIexecProvider } from "../../utils/provider.js";
 
 export const getWalletBalance = {
     name: "get_wallet_balance",

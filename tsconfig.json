@@ -12,6 +12,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "src/tools/grantAccess.ts", "src/tools/processProtectedData.ts"],
+  "include": [
+    "src/**/*",
+    "src/tools/dataProtectorCore/grantAccess.ts",
+    "src/tools/dataProtectorCore/processProtectedData.ts"
+  ],
   "exclude": ["node_modules"]
 }

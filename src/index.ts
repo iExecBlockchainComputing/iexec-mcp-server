@@ -8,16 +8,17 @@ import {
     ErrorCode,
 } from "@modelcontextprotocol/sdk/types.js";
 
-import { protectData } from "./tools/protectData.js";
-import { getUserVoucher } from "./tools/getUserVoucher.js";
-import { getWalletBalance } from "./tools/getWalletBalance.js";
-import { getProtectedData } from "./tools/getProtectedData.js";
-import { transferOwnership } from "./tools/transferOwnership.js";
-import { grantAccess } from "./tools/grantAccess.js";
-import { revokeOneAccess } from "./tools/revokeOneAccess.js";
-import { revokeAllAccess } from "./tools/revokeAllAccess.js";
-import { getGrantedAccess } from "./tools/getGrantedAccess.js";
-import { processProtectedData } from "./tools/processProtectedData.js";
+import { protectData } from "./tools/dataProtectorCore/protectData.js";
+import { getUserVoucher } from "./tools/dataProtectorCore/getUserVoucher.js";
+import { getWalletBalance } from "./tools/dataProtectorCore/getWalletBalance.js";
+import { getProtectedData } from "./tools/dataProtectorCore/getProtectedData.js";
+import { transferOwnership } from "./tools/dataProtectorCore/transferOwnership.js";
+import { grantAccess } from "./tools/dataProtectorCore/grantAccess.js";
+import { revokeOneAccess } from "./tools/dataProtectorCore/revokeOneAccess.js";
+import { revokeAllAccess } from "./tools/dataProtectorCore/revokeAllAccess.js";
+import { getGrantedAccess } from "./tools/dataProtectorCore/getGrantedAccess.js";
+import { processProtectedData } from "./tools/dataProtectorCore/processProtectedData.js";
+import { getIExecApps } from "./tools/getIExecApps.js";
 
 
 const server = new Server(
@@ -33,7 +34,7 @@ const server = new Server(
     }
 );
 
-const tools = [protectData, getProtectedData, processProtectedData, transferOwnership, grantAccess, getGrantedAccess, revokeOneAccess, revokeAllAccess, getUserVoucher, getWalletBalance];
+const tools = [protectData, getProtectedData, processProtectedData, getIExecApps, transferOwnership, grantAccess, getGrantedAccess, revokeOneAccess, revokeAllAccess, getUserVoucher, getWalletBalance];
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
@@ -51,7 +52,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
         throw new McpError(ErrorCode.MethodNotFound, "Tool not found");
     }
 
-    // appelle le handler de l'outil avec les arguments
     const result = await tool.handler(request.params.arguments);
     return { toolResult: result };
 });

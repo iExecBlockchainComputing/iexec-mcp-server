@@ -11,7 +11,6 @@ export const processProtectedData = {
             protectedData: { type: "string" }, // required
             app: { type: "string" },           // required
 
-            // optionnels
             userWhitelist: { type: "string" },
             maxPrice: { type: "number" },
             path: { type: "string" },
@@ -27,7 +26,7 @@ export const processProtectedData = {
             workerpool: { type: "string" },
             useVoucher: { type: "boolean" },
             voucherOwner: { type: "string" },
-            privateKey: { type: "string" }, // required for signing and provider
+            privateKey: { type: "string" }, 
         },
         required: ["protectedData", "app", "privateKey"],
     },
@@ -47,7 +46,6 @@ export const processProtectedData = {
             privateKey,
         } = params;
 
-        // Validation minimale des requis
         if (
             typeof protectedData !== "string" ||
             typeof app !== "string" ||
@@ -61,7 +59,6 @@ export const processProtectedData = {
             const web3Provider = getWeb3Provider(signer.privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
-            // Construire l'objet d'appel en ne mettant que les params définis
             const processParams: any = {
                 protectedData,
                 app,
