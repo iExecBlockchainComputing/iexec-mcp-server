@@ -22,7 +22,7 @@ import { processProtectedData } from "./tools/processProtectedData.js";
 
 const server = new Server(
     {
-        name: "my-mcp-server",
+        name: "iexec-mcp-local-server",
         version: "1.0.0",
     },
     {
