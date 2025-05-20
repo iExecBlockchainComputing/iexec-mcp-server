@@ -1,43 +1,51 @@
+import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { Wallet } from "ethers";
-import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 
 export const protectData = {
     name: "protect_data",
-    description: "Protect data using iExec DataProtector and confidential computing",
+    description:
+        "Protect any JSON-compatible data using iExec's DataProtector. Encryption is client-side and stored as an NFT.",
     inputSchema: {
         type: "object",
         properties: {
-            text: { type: "string" },
-            wallet: { type: "string" }, // Required if no privateKey is provided
-            privateKey: { type: "string" }, // Optional
+            data: { type: "object" },              // Required: JSON object to protect
+            name: { type: "string" },              // Optional: Public name for the protected data
+            wallet: { type: "string" },            // Optional: Destination wallet for transfer
+            privateKey: { type: "string" },        // Optional: If user owns the data directly
+            allowDebug: { type: "boolean" },       // Optional: Enable for dev/testing
         },
-        required: ["text"],
+        required: ["data"],
     },
     handler: async (params: any) => {
-        const { text, wallet, privateKey } = params;
+        const { data, name = "", wallet, privateKey, allowDebug = false } = params;
 
-        if (typeof text !== "string") {
-            throw new McpError(ErrorCode.InvalidParams, "Parameter 'text' must be a string");
+        const hasPrivateKey = typeof privateKey === "string" && privateKey.trim() !== "";
+        const hasWallet = typeof wallet === "string" && wallet.trim() !== "";
+
+        if (!hasPrivateKey && !hasWallet) {
+            throw new McpError(ErrorCode.InvalidParams, "You must provide either a 'privateKey' or a destination 'wallet'");
         }
 
-        const useProvidedKey = typeof privateKey === "string" && privateKey.trim() !== "";
-
-        if (!useProvidedKey && (typeof wallet !== "string" || wallet.trim() === "")) {
-            throw new McpError(ErrorCode.InvalidParams, "Must provide either 'privateKey' or 'wallet'");
+        if (typeof data !== "object" || Array.isArray(data) || data === null) {
+            throw new McpError(ErrorCode.InvalidParams, "Parameter 'data' must be a JSON object");
         }
 
         try {
-            const signer = useProvidedKey ? new Wallet(privateKey) : Wallet.createRandom();
+            const signer = hasPrivateKey ? new Wallet(privateKey) : Wallet.createRandom();
             const web3Provider = getWeb3Provider(signer.privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const protectedData = await dataProtectorCore.protectData({
-                name: "MCP Data Protection",
-                data: { content: text },
+                name,
+                data,
+                allowDebug,
+                onStatusUpdate: ({ title, isDone }: { title: string; isDone: boolean }) => {
+                    console.error(`Status: ${title}, done: ${isDone}`);
+                },
             });
 
-            if (!useProvidedKey && wallet) {
+            if (!hasPrivateKey && hasWallet) {
                 await dataProtectorCore.transferOwnership({
                     protectedData: protectedData.address,
                     newOwner: wallet,
@@ -45,9 +53,10 @@ export const protectData = {
             }
 
             return {
-                message: "Data has been protected",
+                message: "Data protected successfully",
                 protectedDataUrl: `https://explorer.iex.ec/bellecour/dataset/${protectedData.address}`,
-                ...(useProvidedKey
+                protectedData,
+                ...(hasPrivateKey
                     ? { owner: signer.address }
                     : {
                         createdBy: signer.address,
@@ -55,7 +64,8 @@ export const protectData = {
                     }),
             };
         } catch (error: any) {
-            throw new McpError(ErrorCode.InternalError, error.message);
+            throw new McpError(ErrorCode.InternalError, error.message || "Unknown error");
         }
-    },
+    }
+
 };
