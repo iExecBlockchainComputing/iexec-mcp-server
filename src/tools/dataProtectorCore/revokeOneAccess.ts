@@ -44,7 +44,7 @@ export const revokeOneAccess = {
                 throw new McpError(ErrorCode.InvalidParams, "No access found to revoke");
             }
 
-            const grantedToRevoke = grantedAccess[0]; // use first match
+            const grantedToRevoke = grantedAccess[0];
             const { txHash } = await dataProtectorCore.revokeOneAccess(grantedToRevoke);
 
             return {

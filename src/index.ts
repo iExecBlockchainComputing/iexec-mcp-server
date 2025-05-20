@@ -18,8 +18,15 @@ import { revokeOneAccess } from "./tools/dataProtectorCore/revokeOneAccess.js";
 import { revokeAllAccess } from "./tools/dataProtectorCore/revokeAllAccess.js";
 import { getGrantedAccess } from "./tools/dataProtectorCore/getGrantedAccess.js";
 import { processProtectedData } from "./tools/dataProtectorCore/processProtectedData.js";
+
+import { fetchMyContacts } from "./tools/web3mail/fetchMyContacts.js";
+import { fetchUserContacts } from "./tools/web3mail/fetchUserContacts.js";
+import { sendEmail } from "./tools/web3mail/sendEmail.js";
+
 import { getIExecApps } from "./tools/getIExecApps.js";
 
+
+fetchMyContacts
 
 const server = new Server(
     {
@@ -34,7 +41,7 @@ const server = new Server(
     }
 );
 
-const tools = [protectData, getProtectedData, processProtectedData, getIExecApps, transferOwnership, grantAccess, getGrantedAccess, revokeOneAccess, revokeAllAccess, getUserVoucher, getWalletBalance];
+const tools = [protectData, getProtectedData, processProtectedData, getIExecApps, transferOwnership, grantAccess, getGrantedAccess, revokeOneAccess, sendEmail, revokeAllAccess, fetchUserContacts, fetchMyContacts, getUserVoucher, getWalletBalance];
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {

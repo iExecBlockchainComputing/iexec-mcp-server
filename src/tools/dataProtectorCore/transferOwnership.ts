@@ -1,5 +1,4 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import { Wallet } from "ethers";
 import {
     getWeb3Provider,
     IExecDataProtectorCore,
