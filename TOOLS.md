@@ -29,7 +29,6 @@ List granted access permissions for a protected dataset.
 - `protectedData` (string, optional): The address or ID of the protected data.
 - `authorizedApp` (string, optional): Filter by authorized application.
 - `authorizedUser` (string, optional): Filter by authorized user.
-- `privateKey` (string, required): The private key of the wallet to sign requests.
 
 **Output:**
 
@@ -99,7 +98,6 @@ Grant access permissions to a protected dataset for a specific app and user.
 - `protectedData` (string, required): Address or ID of the protected data.
 - `authorizedApp` (string, required): Application to authorize (name or Ethereum address).
 - `authorizedUser` (string, required): User to authorize.
-- `privateKey` (string, required): Private key for signing.
 - `pricePerAccess` (number, optional): Price per access permission.
 - `numberOfAccess` (number, optional): Number of accesses allowed.
 
@@ -128,7 +126,6 @@ Process a protected dataset using iExec confidential computing features.
 - `workerpool` (string, optional): Workerpool to use.
 - `useVoucher` (boolean, optional): Whether to use a voucher.
 - `voucherOwner` (string, optional): Voucher owner address.
-- `privateKey` (string, required): Private key for signing.
 
 **Output:**
 
@@ -147,7 +144,6 @@ Protect any JSON-compatible data by encrypting and storing it as an NFT using iE
 - `data` (object, required): JSON object to protect.
 - `name` (string, optional): Public name for the protected data.
 - `wallet` (string, optional): Destination wallet for transferring ownership.
-- `privateKey` (string, optional): Private key if the user owns the data.
 - `allowDebug` (boolean, optional): Enable debug mode.
 
 **Output:**
@@ -168,7 +164,6 @@ Revoke access to a protected dataset previously granted to a specific applicatio
 - `protectedData` (string, required): Address or ID of the protected data.
 - `authorizedApp` (string, required): Application authorized previously.
 - `authorizedUser` (string, required): User authorized previously.
-- `privateKey` (string, required): Private key to sign the revocation.
 
 **Output:**
 
@@ -186,7 +181,6 @@ Revoke all granted access permissions for a protected dataset, regardless of app
 **Inputs:**
 
 - `protectedData` (string, required): Address or ID of the protected data.
-- `privateKey` (string, required): Private key to sign the revocations.
 
 **Output:**
 
@@ -204,7 +198,6 @@ Transfer ownership of protected data to a new wallet address.
 
 - `protectedData` (string, required): Address or ID of the protected data.
 - `newOwner` (string, required): Wallet address of the new owner.
-- `privateKey` (string, required): Private key of the current owner.
 
 **Output:**
 
@@ -213,9 +206,3 @@ Transfer ownership of protected data to a new wallet address.
 - Explorer URL for the dataset on iExec explorer.
 
 ---
-
-# Notes
-
-- All private keys used in tools should be securely managed and never exposed publicly.
-- The tools interact heavily with the iExec DataProtector SDK and require blockchain connectivity.
-- Error handling uses `McpError` with standardized error codes.

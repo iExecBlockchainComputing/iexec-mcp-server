@@ -1,6 +1,6 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import { Wallet } from "ethers";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
+import 'dotenv/config';
 
 export const processProtectedData = {
     name: "process_protected_data",
@@ -26,9 +26,8 @@ export const processProtectedData = {
             workerpool: { type: "string" },
             useVoucher: { type: "boolean" },
             voucherOwner: { type: "string" },
-            privateKey: { type: "string" }, 
         },
-        required: ["protectedData", "app", "privateKey"],
+        required: ["protectedData", "app"],
     },
     handler: async (params: any) => {
         const {
@@ -43,20 +42,20 @@ export const processProtectedData = {
             workerpool,
             useVoucher,
             voucherOwner,
-            privateKey,
         } = params;
 
         if (
             typeof protectedData !== "string" ||
-            typeof app !== "string" ||
-            typeof privateKey !== "string"
+            typeof app !== "string"
         ) {
             throw new McpError(ErrorCode.InvalidParams, "Missing required parameters");
         }
 
         try {
-            const signer = new Wallet(privateKey);
-            const web3Provider = getWeb3Provider(signer.privateKey);
+            if (!process.env.PRIVATE_KEY) {
+                throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+            }
+            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const processParams: any = {

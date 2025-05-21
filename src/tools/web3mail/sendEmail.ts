@@ -1,6 +1,6 @@
-import { Wallet } from 'ethers';
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
 import { IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
+import 'dotenv/config';
 
 export const sendEmail = {
     name: 'sendEmail',
@@ -8,7 +8,6 @@ export const sendEmail = {
     inputSchema: {
         type: 'object',
         properties: {
-            privateKey: { type: 'string' },
             emailSubject: { type: 'string' },
             emailContent: { type: 'string' },
             protectedData: { type: 'string' },
@@ -19,11 +18,13 @@ export const sendEmail = {
             label: { type: 'string' },                     // optional
             useVoucher: { type: 'boolean' },               // optional
         },
-        required: ['privateKey', 'emailSubject', 'emailContent', 'protectedData'],
+        required: ['emailSubject', 'emailContent', 'protectedData'],
     },
     handler: async (params: any) => {
+        if (!process.env.PRIVATE_KEY) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
         const {
-            privateKey,
             emailSubject,
             emailContent,
             protectedData,
@@ -36,7 +37,6 @@ export const sendEmail = {
         } = params;
 
         if (
-            typeof privateKey !== 'string' ||
             typeof emailSubject !== 'string' ||
             typeof emailContent !== 'string' ||
             typeof protectedData !== 'string'
@@ -45,8 +45,7 @@ export const sendEmail = {
         }
 
         try {
-            const wallet = new Wallet(privateKey);
-            const web3mail = new IExecWeb3mail(wallet);
+            const web3mail = new IExecWeb3mail(process.env.PRIVATE_KEY);
 
             const sendEmailParams: any = {
                 emailSubject,

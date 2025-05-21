@@ -18,6 +18,7 @@ export const getProtectedData = {
         required: ["wallet"],
     },
     handler: async (params: any) => {
+        
         const { wallet, requiredSchema } = params;
 
         if (typeof wallet !== "string") {

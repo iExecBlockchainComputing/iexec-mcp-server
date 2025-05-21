@@ -1,6 +1,6 @@
-import { Wallet } from 'ethers';
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
 import { getWeb3Provider, IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
+import 'dotenv/config';
 
 export const fetchUserContacts = {
     name: 'fetchUserContacts',
@@ -8,21 +8,20 @@ export const fetchUserContacts = {
     inputSchema: {
         type: 'object',
         properties: {
-            privateKey: { type: 'string' },
             userAddress: { type: 'string' },
         },
-        required: ['privateKey', 'userAddress'],
+        required: ['userAddress'],
     },
     handler: async (params: any) => {
-        const { privateKey, userAddress } = params;
-
-        if (typeof privateKey !== 'string' || typeof userAddress !== 'string') {
+        if (!process.env.PRIVATE_KEY) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
+        const { userAddress } = params;
+        if (typeof userAddress !== 'string') {
             throw new McpError(ErrorCode.InvalidParams, 'Invalid or missing parameters');
         }
-
         try {
-            const signer = new Wallet(privateKey);
-            const web3Provider = getWeb3Provider(signer.privateKey);
+            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
             const web3mail = new IExecWeb3mail(web3Provider);
 
             return await web3mail.fetchUserContacts({ userAddress });

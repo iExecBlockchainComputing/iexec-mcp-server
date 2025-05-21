@@ -1,6 +1,6 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import { Wallet } from "ethers";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
+import 'dotenv/config';
 
 export const revokeAllAccess = {
     name: "revoke_all_access",
@@ -10,13 +10,15 @@ export const revokeAllAccess = {
         type: "object",
         properties: {
             protectedData: { type: "string" },
-            privateKey: { type: "string" },
         },
-        required: ["protectedData", "privateKey"],
+        required: ["protectedData"],
     },
     handler: async (params: any) => {
-        const { protectedData, privateKey } = params;
+        if (!process.env.PRIVATE_KEY) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
 
+        const { protectedData } = params;
         if (typeof protectedData !== "string") {
             throw new McpError(
                 ErrorCode.InvalidParams,
@@ -25,8 +27,7 @@ export const revokeAllAccess = {
         }
 
         try {
-            const signer = new Wallet(privateKey);
-            const web3Provider = getWeb3Provider(signer.privateKey);
+            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const { grantedAccess } = await dataProtectorCore.getGrantedAccess({

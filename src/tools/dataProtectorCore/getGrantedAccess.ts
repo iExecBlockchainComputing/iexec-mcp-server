@@ -1,6 +1,6 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import { Wallet } from "ethers";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
+import 'dotenv/config';
 
 export const getGrantedAccess = {
     name: "get_granted_access",
@@ -11,16 +11,16 @@ export const getGrantedAccess = {
             protectedData: { type: "string" },
             authorizedApp: { type: "string" },
             authorizedUser: { type: "string" },
-            privateKey: { type: "string" },
         },
-        required: ["privateKey"],
     },
     handler: async (params: any) => {
-        const { protectedData, authorizedApp, authorizedUser, privateKey } = params;
+        if (!process.env.PRIVATE_KEY) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
+        const { protectedData, authorizedApp, authorizedUser } = params;
 
         try {
-            const signer = new Wallet(privateKey);
-            const web3Provider = getWeb3Provider(signer.privateKey);
+            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const query = {

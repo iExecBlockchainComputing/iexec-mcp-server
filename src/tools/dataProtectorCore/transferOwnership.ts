@@ -1,8 +1,8 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import {
-    getWeb3Provider,
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
+import 'dotenv/config';
 
 export const transferOwnership = {
     name: "transfer_ownership",
@@ -12,12 +12,14 @@ export const transferOwnership = {
         properties: {
             protectedData: { type: "string" },
             newOwner: { type: "string" },
-            privateKey: { type: "string" },
         },
-        required: ["protectedData", "newOwner", "privateKey"],
+        required: ["protectedData", "newOwner"],
     },
     handler: async (params: any) => {
-        const { protectedData, privateKey, newOwner } = params;
+        if (!process.env.PRIVATE_KEY) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
+        const { protectedData, newOwner } = params;
 
         if (typeof protectedData !== "string" || typeof newOwner !== "string") {
             throw new McpError(
@@ -27,11 +29,7 @@ export const transferOwnership = {
         }
 
         try {
-            const web3Provider = getWeb3Provider(privateKey);
-
-
-            const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
-
+            const dataProtectorCore = new IExecDataProtectorCore(process.env.PRIVATE_KEY);
             const result = await dataProtectorCore.transferOwnership({
                 protectedData,
                 newOwner,

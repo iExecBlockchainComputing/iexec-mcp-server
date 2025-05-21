@@ -1,6 +1,6 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import { Wallet } from "ethers";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
+import 'dotenv/config';
 
 // Dictionnaire d'apps connues avec alias
 const iExecApps = {
@@ -52,19 +52,17 @@ export const grantAccess = {
             protectedData: { type: "string" },
             authorizedApp: { type: "string" },
             authorizedUser: { type: "string" },
-            privateKey: { type: "string" },
             pricePerAccess: { type: "number" }, // optionnel
             numberOfAccess: { type: "number" }, // optionnel
         },
-        required: ["protectedData", "privateKey", "authorizedApp", "authorizedUser"],
+        required: ["protectedData", "authorizedApp", "authorizedUser"],
     },
 
-    handler: async (params: { protectedData: any; authorizedApp: any; authorizedUser: any; privateKey: any; pricePerAccess: any; numberOfAccess: any; }) => {
+    handler: async (params: { protectedData: any; authorizedApp: any; authorizedUser: any; pricePerAccess: any; numberOfAccess: any; }) => {
         const {
             protectedData,
             authorizedApp,
             authorizedUser,
-            privateKey,
             pricePerAccess,
             numberOfAccess,
         } = params;
@@ -81,9 +79,12 @@ export const grantAccess = {
         }
 
         try {
+            if (!process.env.PRIVATE_KEY) {
+                throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+            }
             const resolvedApp = resolveApp(authorizedApp);
-            const signer = new Wallet(privateKey);
-            const web3Provider = getWeb3Provider(signer.privateKey);
+
+            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const grantOptions: {

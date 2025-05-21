@@ -2,6 +2,25 @@
 
 > A [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol) compatible server to interact with the [iExec](https://iex.ec) protocol — built for Claude, agents, and AI tooling.
 
+## ⚠️ Important
+
+Some MCP tools require signing blockchain transactions, which means you’ll need to provide your private key.
+
+To enable signing, create a `.env` file at the project root by copying the example:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` and replace the placeholder with your private key:
+
+```bash
+PRIVATE_KEY=your_private_key_here
+```
+
+🔒 Your private key stays local and secure.  
+✅ The `.env` file is in `.gitignore` and won’t be committed.
+
 ## 🚀 Quickstart
 
 Follow these steps to set up and run the iExec MCP server locally:

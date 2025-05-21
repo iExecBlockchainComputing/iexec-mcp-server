@@ -1,6 +1,7 @@
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { Wallet } from "ethers";
+import 'dotenv/config';
 
 export const protectData = {
     name: "protect_data",
@@ -12,27 +13,21 @@ export const protectData = {
             data: { type: "object" },              // Required: JSON object to protect
             name: { type: "string" },              // Optional: Public name for the protected data
             wallet: { type: "string" },            // Optional: Destination wallet for transfer
-            privateKey: { type: "string" },        // Optional: If user owns the data directly
             allowDebug: { type: "boolean" },       // Optional: Enable for dev/testing
         },
         required: ["data"],
     },
     handler: async (params: any) => {
-        const { data, name = "", wallet, privateKey, allowDebug = false } = params;
-
-        const hasPrivateKey = typeof privateKey === "string" && privateKey.trim() !== "";
-        const hasWallet = typeof wallet === "string" && wallet.trim() !== "";
-
-        if (!hasPrivateKey && !hasWallet) {
-            throw new McpError(ErrorCode.InvalidParams, "You must provide either a 'privateKey' or a destination 'wallet'");
+        if (!process.env.PRIVATE_KEY) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
-
+        const { data, name = "", allowDebug = false } = params;
         if (typeof data !== "object" || Array.isArray(data) || data === null) {
             throw new McpError(ErrorCode.InvalidParams, "Parameter 'data' must be a JSON object");
         }
 
         try {
-            const signer = hasPrivateKey ? new Wallet(privateKey) : Wallet.createRandom();
+            const signer = new Wallet(process.env.PRIVATE_KEY);
             const web3Provider = getWeb3Provider(signer.privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
@@ -45,23 +40,11 @@ export const protectData = {
                 },
             });
 
-            if (!hasPrivateKey && hasWallet) {
-                await dataProtectorCore.transferOwnership({
-                    protectedData: protectedData.address,
-                    newOwner: wallet,
-                });
-            }
-
             return {
                 message: "Data protected successfully",
                 protectedDataUrl: `https://explorer.iex.ec/bellecour/dataset/${protectedData.address}`,
                 protectedData,
-                ...(hasPrivateKey
-                    ? { owner: signer.address }
-                    : {
-                        createdBy: signer.address,
-                        transferredTo: wallet,
-                    }),
+                owner: signer.address
             };
         } catch (error: any) {
             throw new McpError(ErrorCode.InternalError, error.message || "Unknown error");
