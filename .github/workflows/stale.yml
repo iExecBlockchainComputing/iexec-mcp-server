@@ -1,0 +1,9 @@
+name: 'Close stale issues and PRs'
+
+on:
+  schedule:
+    - cron: '30 1 * * *'
+
+jobs:
+  stale:
+    uses: iExecBlockchainComputing/github-actions-workflows/.github/workflows/stale.yml@stale-v1.0.0
