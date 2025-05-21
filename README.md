@@ -1,21 +1,25 @@
-# 🧠 iExec MCP Server
+# iExec MCP Server
 
 > A [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol) compatible server to interact with the [iExec](https://iex.ec) protocol — built for Claude, agents, and AI tooling.
 
----
-
 ## 🚀 Quickstart
 
-Here’s how to get started with the iExec MCP server locally:
+Follow these steps to set up and run the iExec MCP server locally:
 
 ```bash
 git clone https://github.com/iexec-blockchain-computing/iexec-mcp-server.git
 cd iexec-mcp-server
 npm install
 npm run build
+
 ```
 
-Copy the absolute path of the generated `build/index.js` file. You will need to add this to Claude desktop client config.
+After building, locate the generated `build/index.js` file and copy its absolute path — you’ll need it to configure the Claude Desktop client.
+
+> 💡 **Tip:**
+>
+> - On **macOS/Linux**: run `realpath build/index.js` to get the absolute path
+> - On **Windows (PowerShell)**: run `Get-Item build/index.js | Resolve-Path`
 
 ---
 
@@ -26,11 +30,11 @@ The easiest way to test your MCP server is to use the **Claude Desktop** client.
 1. Open the settings of your Claude desktop client.
 2. Navigate to **Developer > Edit Config**.
 
-![Open Claude Config](claude-config-1.png)
+![Open Claude Config](./assets/images/claude-edit-config.png)
 
-3. Click `Edit Config`. A file picker will appear — choose the file named `claude_desktop_config.json`.
-
-4. Add the following lines to the file to connect your iExec MCP server:
+3. Choose the file: `claude_desktop_config.json`
+   ![Choose Config File](./assets/images/claude-config-file-picker.png)
+4. Add your MCP server entry:
 
 ```json
 {
@@ -47,7 +51,7 @@ The easiest way to test your MCP server is to use the **Claude Desktop** client.
 
 5. Restart Claude Desktop. A new plug icon should appear for the `iexec-mcp-server`.
 
-![iExec MCP Tools](iexec-mcp-tools-list.png)
+![iExec MCP Tools](./assets/images/mcp-tools-in-claude.png)
 
 You can now start using tools from your local MCP server directly in Claude chats.
 
@@ -55,33 +59,32 @@ You can now start using tools from your local MCP server directly in Claude chat
 
 ## 🛠️ Available Tools
 
-This MCP server provides a rich toolbox to interact with iExec’s decentralized infrastructure:
+### 🔐 Confidential Data
 
-### 🧪 Confidential Data & Compute
-
-- `protectData`: Protect a file and publish it via iExec DataProtector
-- `getProtectedData`: List your protected datasets
-- `processProtectedData`: Compute on protected datasets
+- `protectData`: Encrypt and publish JSON data as a protectedData NFT using iExec DataProtector.
+- `getProtectedData`: List all protected data for a given owner, data schema, or both.
+- `processProtectedData`: Allows processing a protected dataset through use of a specified iExec application.
 
 ### 🛡️ Data Governance
 
-- `grantAccess`: Grant access to a data asset
-- `revokeOneAccess`: Revoke one access
-- `revokeAllAccess`: Revoke all access to a dataset
-- `transferOwnership`: Transfer asset ownership
-- `getGrantedAccess`: List granted accesses
+- `grantAccess`: Authorizes a user and app to securely process a protected data.
+- `revokeOneAccess`: Removes access rights to a specific protected data for a given user and app.
+- `revokeAllAccess`: Remove all granted access permissions for a specific protected dataset.
 
-### 📬 Messaging via Web3Mail
+- `transferOwnership`: Change the ownership of a protected data asset to another wallet address.
 
-- `sendEmail`: Send a decentralized message
-- `fetchMyContacts`: Get your own contact list
-- `fetchUserContacts`: Fetch another user’s contacts
+- `getGrantedAccess`: Retrieve the list of users and apps currently authorized to access a protected
+
+### 📬 Web3Mail
+
+- `sendEmail`: Send a message to a user via Web3mail without knowing their email, using a protected and authorized data asset.
+- `fetchMyContacts`: Retrieve a list of users who authorized you to send them emails, along with their protected email data references.
+
+- `fetchUserContacts`: Retrieves contacts who have authorized a user to send them Web3Mail emails.
 
 ### 💳 Wallet & Resources
 
-- `getUserVoucher`: Check available vouchers
-- `getWalletBalance`: Query token balances
-- `getIExecApps`: List available apps on iExec marketplace
+- `getUserVoucher`, `getWalletBalance`, `getIExecApps`
 
 A full list of tools and parameters is available in [`TOOLS.md`](./TOOLS.md) _(optional, create if needed)_.
 
@@ -181,19 +184,21 @@ These are example prompts to test your tools from Claude:
 
 ## 🧪 Process Protected Data with iExec App
 
+**List available iExec apps**
+
+> "Show available apps for data processing."
+
 **Prompt:**
 
 > "Run the iExec application `0X-analyze-data-app` on my protected dataset `0x123`."
 
 ---
 
-## 🔒 Security Considerations
+## 🛡️ Security Considerations
 
-- This MCP server is intended to be run locally.
-- No private key is exposed to Claude or the LLM.
-- You are responsible for managing secrets (e.g. iExec wallet keys, protected data) via secure environments.
-
----
+- This server runs **locally** — no data leaves your machine.
+- Secrets like private keys stay in your secure environment.
+- Claude and other agents **don't access your keys or data**.
 
 ## 👩‍💻 Contributing
 
@@ -202,30 +207,8 @@ Contributions and feedback are welcome!
 - Fork this repo and open a pull request
 - Or open an issue to suggest improvements
 
----
+## 📬 Contact & Resources
 
-## 📬 Contact
-
-- Join us on [Discord](https://discord.gg/iexec)
-- Read the full [iExec Developer Docs](https://docs.iex.ec)
-- Learn about [Model Context Protocol (MCP)](https://github.com/modelcontextprotocol)
-
----
-
-## 🧪 Dev Notes
-
-To test MCP server locally with logs:
-
-```bash
-NODE_ENV=dev node build/index.js
-```
-
-To add or edit tools:
-
-```
-./tools/dataProtectorCore/*.js
-./tools/web3mail/*.js
-./tools/getIExecApps.js
-```
-
----
+- [iExec Developer Docs](https://docs.iex.ec)
+- [Join iExec on Discord](https://discord.iex.ec)
+- [About MCP](https://modelcontextprotocol.io/introduction)
