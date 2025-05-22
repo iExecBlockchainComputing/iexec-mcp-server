@@ -1,6 +1,5 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
-import 'dotenv/config';
 
 export const revokeOneAccess = {
     name: "revoke_access",

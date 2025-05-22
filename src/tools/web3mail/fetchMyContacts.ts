@@ -1,6 +1,5 @@
 import { getWeb3Provider, IExecWeb3mail } from "@iexec/web3mail";
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
-import 'dotenv/config';
 
 export const fetchMyContacts = {
     name: "fetchMyContacts",

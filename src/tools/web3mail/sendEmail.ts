@@ -1,6 +1,5 @@
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
 import { IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
-import 'dotenv/config';
 
 export const sendEmail = {
     name: 'sendEmail',
