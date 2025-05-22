@@ -11,16 +11,22 @@ export const getGrantedAccess = {
             protectedData: { type: "string" },
             authorizedApp: { type: "string" },
             authorizedUser: { type: "string" },
+            isUserStrict: { type: "boolean" },
+            page: { type: "number", minimum: 0 },
+            pageSize: { type: "number", minimum: 10, maximum: 1000 },
         },
+        required: [],
     },
     handler: async (params: any) => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
         const { protectedData, authorizedApp, authorizedUser } = params;
 
         try {
-            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
+            const web3Provider = getWeb3Provider(privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const query = {

@@ -119,7 +119,7 @@ These are example prompts to test your tools from Claude:
 
 **Prompt:**
 
-> "Please protect my email address `alice.example@email.com` using iExec DataProtector. Use my wallet address `0x123...` to handle any necessary top-up."
+> "Please protect my email address `alice.example@gmail.com` with the name "iexec-mcp-email-demo" using iExec DataProtector."
 
 ---
 
@@ -127,7 +127,7 @@ These are example prompts to test your tools from Claude:
 
 **Prompt:**
 
-> "Retrieve the protected data associated with my wallet address `0x1234567890abcdef1234567890abcdef12345678`."
+> "List all protected data tied to my wallet with full details."
 
 ---
 
@@ -135,7 +135,7 @@ These are example prompts to test your tools from Claude:
 
 **Prompt:**
 
-> Grant access to protected data `0x123` for app `web3mail` and user `0xUSER` using my private key
+> Grant access to protected data `0x123` for iExec app `web3mail` and user `0xUSER`.
 
 ---
 
@@ -143,7 +143,7 @@ These are example prompts to test your tools from Claude:
 
 **Prompt:**
 
-> "Revoke access to protected data `0x123` for app `web3mail` and user `0xUSER`. Here's my private key."
+> "Revoke access to protected data `0x123` for app `web3mail` and user `0xUSER`."
 
 ---
 

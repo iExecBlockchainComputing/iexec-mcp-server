@@ -59,6 +59,11 @@ export const grantAccess = {
     },
 
     handler: async (params: { protectedData: any; authorizedApp: any; authorizedUser: any; pricePerAccess: any; numberOfAccess: any; }) => {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
         const {
             protectedData,
             authorizedApp,
@@ -79,12 +84,10 @@ export const grantAccess = {
         }
 
         try {
-            if (!process.env.PRIVATE_KEY) {
-                throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-            }
-            const resolvedApp = resolveApp(authorizedApp);
 
-            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
+            const resolvedApp = resolveApp(authorizedApp);
+            console.error("Resolved app:", resolvedApp);
+            const web3Provider = getWeb3Provider(privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const grantOptions: {
@@ -116,6 +119,7 @@ export const grantAccess = {
                 grantedAccess,
             };
         } catch (error) {
+            console.error("Error granting access:", error);
             if (error instanceof Error) {
                 throw new McpError(ErrorCode.InternalError, error.message);
             } else {

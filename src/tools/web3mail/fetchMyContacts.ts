@@ -11,12 +11,14 @@ export const fetchMyContacts = {
         },
     },
     handler: async () => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
 
         try {
-            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
+            const web3Provider = getWeb3Provider(privateKey);
             const web3mail = new IExecWeb3mail(web3Provider);
             return await web3mail.fetchMyContacts();
         } catch (error: any) {

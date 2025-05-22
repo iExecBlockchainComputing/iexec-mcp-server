@@ -8,32 +8,34 @@ import {
 export const getProtectedData = {
     name: "get_protected_data",
     description:
-        "Retrieve protected data using iExec DataProtector. You can optionally filter by wallet or schema.",
+        "Retrieve protected data using iExec DataProtector. You can filter by owner, data address, schema, timestamp, pagination.",
     inputSchema: {
         type: "object",
         properties: {
-            wallet: { type: "string" },
+            owner: { type: "string" },
+            protectedDataAddress: { type: "string" },
             requiredSchema: { type: "object" },
+            createdAfterTimestamp: { type: "number" },
+            page: { type: "number" },
+            pageSize: { type: "number" },
         },
-        required: ["wallet"],
+        required: [],
     },
-    handler: async (params: any) => {
-        
-        const { wallet, requiredSchema } = params;
+    handler: async () => {
+        const privateKey = process.env.PRIVATE_KEY as string;
 
-        if (typeof wallet !== "string") {
-            throw new McpError(ErrorCode.InvalidParams, "wallet must be a string");
+        if (!privateKey) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
 
         try {
-            const walletInstance = Wallet.createRandom();
-            const web3Provider = getWeb3Provider(walletInstance.privateKey);
+            const wallet = new Wallet(privateKey);
+            const web3Provider = getWeb3Provider(privateKey);
 
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const protectedDataList = await dataProtectorCore.getProtectedData({
-                owner: wallet,
-                ...(requiredSchema && { requiredSchema }),
+                owner: wallet.address,
             });
 
             return {

@@ -13,7 +13,9 @@ export const fetchUserContacts = {
         required: ['userAddress'],
     },
     handler: async (params: any) => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
         const { userAddress } = params;
@@ -21,7 +23,7 @@ export const fetchUserContacts = {
             throw new McpError(ErrorCode.InvalidParams, 'Invalid or missing parameters');
         }
         try {
-            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
+            const web3Provider = getWeb3Provider(privateKey);
             const web3mail = new IExecWeb3mail(web3Provider);
 
             return await web3mail.fetchUserContacts({ userAddress });

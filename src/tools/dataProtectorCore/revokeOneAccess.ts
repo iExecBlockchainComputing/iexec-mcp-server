@@ -15,7 +15,9 @@ export const revokeOneAccess = {
         required: ["protectedData", "authorizedApp", "authorizedUser"],
     },
     handler: async (params: any) => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
         const { protectedData, authorizedApp, authorizedUser } = params;
@@ -32,7 +34,7 @@ export const revokeOneAccess = {
         }
 
         try {
-            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
+            const web3Provider = getWeb3Provider(privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const { grantedAccess } = await dataProtectorCore.getGrantedAccess({

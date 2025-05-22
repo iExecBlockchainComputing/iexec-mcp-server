@@ -30,6 +30,11 @@ export const processProtectedData = {
         required: ["protectedData", "app"],
     },
     handler: async (params: any) => {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
+            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
+        }
         const {
             protectedData,
             app,
@@ -52,10 +57,7 @@ export const processProtectedData = {
         }
 
         try {
-            if (!process.env.PRIVATE_KEY) {
-                throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-            }
-            const web3Provider = getWeb3Provider(process.env.PRIVATE_KEY);
+            const web3Provider = getWeb3Provider(privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const processParams: any = {

@@ -21,7 +21,9 @@ export const sendEmail = {
         required: ['emailSubject', 'emailContent', 'protectedData'],
     },
     handler: async (params: any) => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
         const {
@@ -45,7 +47,7 @@ export const sendEmail = {
         }
 
         try {
-            const web3mail = new IExecWeb3mail(process.env.PRIVATE_KEY);
+            const web3mail = new IExecWeb3mail(privateKey);
 
             const sendEmailParams: any = {
                 emailSubject,

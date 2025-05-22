@@ -16,7 +16,9 @@ export const transferOwnership = {
         required: ["protectedData", "newOwner"],
     },
     handler: async (params: any) => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY as string;
+
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
         const { protectedData, newOwner } = params;
@@ -29,7 +31,7 @@ export const transferOwnership = {
         }
 
         try {
-            const dataProtectorCore = new IExecDataProtectorCore(process.env.PRIVATE_KEY);
+            const dataProtectorCore = new IExecDataProtectorCore(privateKey);
             const result = await dataProtectorCore.transferOwnership({
                 protectedData,
                 newOwner,

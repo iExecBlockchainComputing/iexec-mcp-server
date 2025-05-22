@@ -1,6 +1,7 @@
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { Wallet } from "ethers";
+import { z } from "zod";
 import 'dotenv/config';
 
 export const protectData = {
@@ -12,13 +13,13 @@ export const protectData = {
         properties: {
             data: { type: "object" },              // Required: JSON object to protect
             name: { type: "string" },              // Optional: Public name for the protected data
-            wallet: { type: "string" },            // Optional: Destination wallet for transfer
             allowDebug: { type: "boolean" },       // Optional: Enable for dev/testing
         },
         required: ["data"],
     },
     handler: async (params: any) => {
-        if (!process.env.PRIVATE_KEY) {
+        const privateKey = process.env.PRIVATE_KEY;
+        if (!privateKey) {
             throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
         }
         const { data, name = "", allowDebug = false } = params;
@@ -27,7 +28,7 @@ export const protectData = {
         }
 
         try {
-            const signer = new Wallet(process.env.PRIVATE_KEY);
+            const signer = new Wallet(privateKey);
             const web3Provider = getWeb3Provider(signer.privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
@@ -50,5 +51,4 @@ export const protectData = {
             throw new McpError(ErrorCode.InternalError, error.message || "Unknown error");
         }
     }
-
 };
