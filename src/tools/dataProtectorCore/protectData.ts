@@ -2,7 +2,6 @@ import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { Wallet } from "ethers";
 import { z } from "zod";
-import 'dotenv/config';
 
 export const protectData = {
     name: "protect_data",

@@ -2,7 +2,6 @@ import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import {
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
-import 'dotenv/config';
 
 export const transferOwnership = {
     name: "transfer_ownership",
