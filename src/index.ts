@@ -25,9 +25,6 @@ import { sendEmail } from "./tools/web3mail/sendEmail.js";
 
 import { getIExecApps } from "./tools/getIExecApps.js";
 
-
-fetchMyContacts
-
 const server = new Server(
     {
         name: "iexec-mcp-local-server",
