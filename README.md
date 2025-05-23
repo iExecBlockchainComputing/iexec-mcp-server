@@ -2,232 +2,228 @@
 
 > A [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol) compatible server to interact with the [iExec](https://iex.ec) protocol — built for Claude, agents, and AI tooling.
 
-## ⚠️ Important
+---
 
-Some MCP tools require signing blockchain transactions, which means you’ll need to provide your private key.
+1. Ensure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/get-npm) installed.
+2. Clone the repository and install dependencies:
+   ```bash
+   git clone https://github.com/iexec-blockchain-computing/iexec-mcp-server.git
+   cd iexec-mcp-server
+   npm install
+   npm run build
+   ```
 
-To enable signing, create a `.env` file at the project root by copying the example:
+## 1. Prerequisites
+
+- **For Local (Node.js) setup:**
+  - Node.js (version 18 or higher)
+  - npm (version 9 or higher)
+- **For Docker setup:**
+  - Docker installed
+- An Ethereum private key (from iExec or any wallet)
+- (Optional) Claude Desktop if you want to integrate with Claude
+
+---
+
+## 2. Wallet Setup
+
+**Option 1: Create a new wallet with iExec**
 
 ```bash
-cp .env.example .env
+npm install -g iexec
+iexec wallet create --unencrypted
 ```
 
-Then edit `.env` and replace the placeholder with your private key:
+Find your wallet at:
 
-```bash
-PRIVATE_KEY=your_private_key_here
-```
+- Linux: `~/.ethereum/keystore/wallet.json`
+- macOS: `~/Library/Ethereum/keystore/wallet.json`
+- Windows: `%APPDATA%/Ethereum/keystore/wallet.json`
 
-🔒 Your private key stays local and secure.  
-✅ The `.env` file is in `.gitignore` and won’t be committed.
+**Option 2: Use an existing private key**
 
-## 🚀 Quickstart
+- Create a `wallet.json`:
+  ```bash
+  mkdir -p ./my-wallet
+  echo '{"privateKey":"0xYOUR_PRIVATE_KEY"}' > ./my-wallet/wallet.json
+  ```
+- Or use your raw private key directly in Claude configuration.
 
-Follow these steps to set up and run the iExec MCP server locally:
+---
+
+## 3. Local (Node.js)
+
+Follow these steps to run the iExec MCP Server locally with Node.js and integrate it with Claude Desktop.
+
+### 3.1. Clone, Install, and Build
 
 ```bash
 git clone https://github.com/iexec-blockchain-computing/iexec-mcp-server.git
 cd iexec-mcp-server
 npm install
 npm run build
-
 ```
 
-After building, locate the generated `build/index.js` file and copy its absolute path — you’ll need it to configure the Claude Desktop client.
+> All configuration (PRIVATE_KEY_PATH or PRIVATE_KEY) is set in the Claude config, not as shell variables.
 
-> 💡 **Tip:**
->
-> - On **macOS/Linux**: run `realpath build/index.js` to get the absolute path
-> - On **Windows (PowerShell)**: run `Get-Item build/index.js | Resolve-Path`
+### 3.2. Integrate with Claude Desktop
 
----
+1. Download and install [Claude Desktop](https://github.com/anthropics/claude-desktop/releases) if you haven't already.
+2. Open Claude Desktop → **Developer > Edit Config**
+3. Edit your `claude_desktop_config.json`:
 
-## ⚙️ Configuring Claude Desktop Client
-
-The easiest way to test your MCP server is to use the **Claude Desktop** client.
-
-1. Open the settings of your Claude desktop client.
-2. Navigate to **Developer > Edit Config**.
-
-![Open Claude Config](./assets/images/claude-edit-config.png)
-
-3. Choose the file: `claude_desktop_config.json`
-   ![Choose Config File](./assets/images/claude-config-file-picker.png)
-4. Add your MCP server entry:
+**With `PRIVATE_KEY_PATH`:**
 
 ```json
 {
   "mcpServers": {
     "iexec-mcp-server": {
       "command": "node",
-      "args": ["/absolute/path/to/iexec-mcp-server/build/index.js"]
+      "args": ["/absolute/path/to/iexec-mcp-server/build/index.js"],
+      "env": {
+        "PRIVATE_KEY_PATH": "/absolute/path/to/wallet.json"
+      }
     }
   }
 }
 ```
 
-> ✅ **Important:** Replace `/absolute/path/to/...` with the actual absolute path to your `index.js` file in the build folder.
+**With `PRIVATE_KEY`:**
 
-5. Restart Claude Desktop. A new plug icon should appear for the `iexec-mcp-server`.
+```json
+{
+  "mcpServers": {
+    "iexec-mcp-server": {
+      "command": "node",
+      "args": ["/absolute/path/to/iexec-mcp-server/build/index.js"],
+      "env": {
+        "PRIVATE_KEY": "0xYOUR_PRIVATE_KEY"
+      }
+    }
+  }
+}
+```
 
-![iExec MCP Tools](./assets/images/mcp-tools-in-claude.png)
-
-You can now start using tools from your local MCP server directly in Claude chats.
-
----
-
-## 🛠️ Available Tools
-
-### 🔐 Confidential Data
-
-- `protectData`: Encrypt and publish JSON data as a protectedData NFT using iExec DataProtector.
-- `getProtectedData`: List all protected data for a given owner, data schema, or both.
-- `processProtectedData`: Allows processing a protected dataset through use of a specified iExec application.
-
-### 🛡️ Data Governance
-
-- `grantAccess`: Authorizes a user and app to securely process a protected data.
-- `revokeOneAccess`: Removes access rights to a specific protected data for a given user and app.
-- `revokeAllAccess`: Remove all granted access permissions for a specific protected dataset.
-
-- `transferOwnership`: Change the ownership of a protected data asset to another wallet address.
-
-- `getGrantedAccess`: Retrieve the list of users and apps currently authorized to access a protected
-
-### 📬 Web3Mail
-
-- `sendEmail`: Send a message to a user via Web3mail without knowing their email, using a protected and authorized data asset.
-- `fetchMyContacts`: Retrieve a list of users who authorized you to send them emails, along with their protected email data references.
-
-- `fetchUserContacts`: Retrieves contacts who have authorized a user to send them Web3Mail emails.
-
-### 💳 Wallet & Resources
-
-- `getUserVoucher`, `getWalletBalance`, `getIExecApps`
-
-A full list of tools and parameters is available in [`TOOLS.md`](./TOOLS.md) _(optional, create if needed)_.
+3. Restart Claude Desktop. You should see a plug icon for `iexec-mcp-server`.
 
 ---
 
-## ✨ Example Prompts
+## 4. Docker
 
-These are example prompts to test your tools from Claude:
+Follow these steps to run the iExec MCP Server with Docker and integrate it with Claude Desktop.
 
----
+### 4.1: Prerequisites
 
-## 🔐 Protect My Email Address
+- Docker installed
+- An Ethereum private key (from iExec or any wallet)
+- (Optional) Claude Desktop
 
-**Prompt:**
+### 4.2. Run the Server with Docker
 
-> "Please protect my email address `alice.example@gmail.com` with the name "iexec-mcp-email-demo" using iExec DataProtector."
+- **With wallet file:**
+  ```bash
+  docker run -i --rm --init -e PRIVATE_KEY_PATH=/absolute/path/to/wallet.json iexec/mcp-server:latest
+  ```
+- **With raw private key:**
+  ```bash
+  docker run -i --rm --init -e PRIVATE_KEY=0xYOUR_PRIVATE_KEY iexec/mcp-server:latest
+  ```
 
----
+### 4.3. Integrate with Claude Desktop
 
-## 📥 Retrieve My Protected Data
+1. Open Claude Desktop → **Developer > Edit Config**
+2. Edit your `claude_desktop_config.json`:
 
-**Prompt:**
+**With `PRIVATE_KEY_PATH`:**
 
-> "List all protected data tied to my wallet with full details."
+```json
+{
+  "mcpServers": {
+    "iexec-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--init",
+        "-e",
+        "PRIVATE_KEY_PATH=/absolute/path/to/wallet.json",
+        "iexec/mcp-server:latest"
+      ]
+    }
+  }
+}
+```
 
----
+**With `PRIVATE_KEY`:**
 
-## 📨 Grant Web3mail Access to Another User
+```json
+{
+  "mcpServers": {
+    "iexec-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--init",
+        "-e",
+        "PRIVATE_KEY=0xYOUR_PRIVATE_KEY",
+        "iexec/mcp-server:latest"
+      ]
+    }
+  }
+}
+```
 
-**Prompt:**
-
-> Grant access to protected data `0x123` for iExec app `web3mail` and user `0xUSER`.
-
----
-
-## ❌ Revoke a User’s Access to My Data
-
-**Prompt:**
-
-> "Revoke access to protected data `0x123` for app `web3mail` and user `0xUSER`."
-
----
-
-## ❌ Revoke a User’s Access to My Data
-
-**Prompt:**
-
-> "Revoke all access previously granted for protected data `0x123`."
-
-## 🔄 Transfer Ownership of Protected Data
-
-**Prompt:**
-
-> "Transfer the ownership of the protected data `0x123` to the address `0x456`."
-
----
-
-## 📬 Send a Web3mail
-
-**Prompt:**
-
-> "Send an email via Web3mail to `0xrecipientaddress123...` with the subject `Data Access Update` and message `Hello, your request to access the protected data has been approved.`"
-
----
-
-## 👥 Fetch My Web3mail Contacts
-
-**Prompt:**
-
-> "List all my Web3mail contacts stored with my wallet."
-
----
-
-## 💸 Get My Wallet Balance
-
-**Prompt:**
-
-> "What’s my current wallet balance on iExec? My wallet address is `0x123...`."
+3. Restart Claude Desktop. You should see a plug icon for `iexec-mcp-server`.
 
 ---
 
-## 🎛️ List Available iExec Apps
+## 5. Available Tools & API
 
-**Prompt:**
+- **Confidential Data:** `protectData`, `getProtectedData`, `processProtectedData`
+- **Data Governance:** `grantAccess`, `revokeOneAccess`, `revokeAllAccess`, `transferOwnership`, `getGrantedAccess`
+- **Web3Mail:** `sendEmail`, `fetchMyContacts`, `fetchUserContacts`
+- **Wallet & Resources:** `getUserVoucher`, `getWalletBalance`, `getIExecApps`
 
-> "List all available iExec applications I can use for processing protected data."
-
----
-
-## 🎟️ Check for User Voucher
-
-**Prompt:**
-
-> "Do I currently have a user voucher to pay for iExec tasks?"
+> Full API docs: [`TOOLS.md`](./TOOLS.md)
 
 ---
 
-## 🧪 Process Protected Data with iExec App
+## 6. Example Prompts
 
-**List available iExec apps**
-
-> "Show available apps for data processing."
-
-**Prompt:**
-
-> "Run the iExec application `0X-analyze-data-app` on my protected dataset `0x123`."
+- "Please protect my email address `alice@example.com` with the name `iexec-mcp-email-demo`."
+- "List all protected data tied to my wallet."
+- "Grant access to protected data `0x123` for iExec app `web3mail` and user `0xUSER`."
+- "Revoke access to protected data `0x123` for app `web3mail` and user `0xUSER`."
+- "Revoke all access for protected data `0x123`."
+- "Transfer the ownership of protected data `0x123` to `0x456`."
+- "Send email to `0xrecipient` with subject `Update` and message `Access approved`."
+- "List all my Web3mail contacts."
+- "What's my wallet balance on iExec?"
+- "Do I have a user voucher?"
+- "Run app `0xAPP` on protected data `0xDATA`."
 
 ---
 
-## 🛡️ Security Considerations
+## 7. Security & Best Practices
 
-- This server runs **locally** — no data leaves your machine.
-- Secrets like private keys stay in your secure environment.
-- Claude and other agents **don't access your keys or data**.
+- For production, use `PRIVATE_KEY_PATH` and keep your wallet file secure.
+- Never commit your private key or wallet file to source control.
+- The server runs locally; your private key is never sent externally.
+- Claude and other agents never access your key or raw data.
 
-## 👩‍💻 Contributing
+---
 
-Contributions and feedback are welcome!
-
-- Fork this repo and open a pull request
-- Or open an issue to suggest improvements
-
-## 📬 Contact & Resources
+## 8. Help & Resources
 
 - [iExec Developer Docs](https://docs.iex.ec)
 - [Join iExec on Discord](https://discord.iex.ec)
 - [About MCP](https://modelcontextprotocol.io/introduction)
+
+---
+
+## 9. Contributing
+
+Contributions welcome! Open an issue or PR to suggest improvements.

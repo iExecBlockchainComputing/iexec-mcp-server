@@ -2,13 +2,18 @@ version: "3.8"
 
 services:
   mcp-server:
+    image: iexec/mcp-server:latest
     build: .
     container_name: iexec-mcp-server
     environment:
-      - NODE_ENV=production
+      - REMOTE=${REMOTE}
+      - PORT=${PORT}
       - PRIVATE_KEY=${PRIVATE_KEY}
+      - PRIVATE_KEY_PATH=${PRIVATE_KEY_PATH}
     volumes:
-      - .:/app
+      - ${PRIVATE_KEY_PATH}:/root/.ethereum/keystore:ro
     ports:
-      - "3000:3000"
-    command: node build/index.js
+      - "3000:3000" # expose only if REMOTE=true
+    stdin_open: true # required for stdio
+    tty: true
+    restart: unless-stopped
