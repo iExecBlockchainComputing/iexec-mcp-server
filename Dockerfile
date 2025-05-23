@@ -1,20 +1,17 @@
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-COPY package*.json tsconfig.json ./
-COPY src ./src
-
-RUN npm ci
-
-RUN npm run build
-
 FROM node:20-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
+COPY . .
 
-ENTRYPOINT ["node", "build/index.js"]
+RUN npm install
+
+RUN npm run build
+
+# Expose the port (only useful for remote mode)
+EXPOSE 3001
+
+ENV NODE_ENV=production
+
+# Start the MCP server (by default using stdio)
+CMD ["node", "build/index.js"]
