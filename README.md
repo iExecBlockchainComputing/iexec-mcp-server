@@ -4,15 +4,6 @@
 
 ---
 
-1. Ensure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/get-npm) installed.
-2. Clone the repository and install dependencies:
-   ```bash
-   git clone https://github.com/iexec-blockchain-computing/iexec-mcp-server.git
-   cd iexec-mcp-server
-   npm install
-   npm run build
-   ```
-
 ## 1. Prerequisites
 
 - **For Local (Node.js) setup:**
@@ -51,7 +42,24 @@ Find your wallet at:
 
 ---
 
-## 3. Local (Node.js)
+## 3. Quickstart with Claude Code CLI
+
+The fastest way to get started is using the Claude Code CLI:
+
+```bash
+# Install Claude Code CLI
+npm install -g @anthropic-ai/claude-code
+
+# Add iExec MCP server with your wallet
+claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wallet.json -- npx @paypes/iexec-mcp@latest run
+
+# run claude
+claude
+```
+
+---
+
+## 4. Local (Node.js)
 
 Follow these steps to run the iExec MCP Server locally with Node.js and integrate it with Claude Desktop.
 
