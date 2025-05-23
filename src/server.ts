@@ -81,7 +81,14 @@ export async function startServer(): Promise<void> {
             throw new McpError(ErrorCode.MethodNotFound, "Tool not found");
         }
         const result = await tool.handler(request.params.arguments);
-        return { toolResult: result };
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: typeof result === 'string' ? result : JSON.stringify(result, null, 2)
+                }
+            ]
+        };
     });
 
     if (remote === "true") {
