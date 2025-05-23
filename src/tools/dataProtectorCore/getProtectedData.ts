@@ -4,6 +4,7 @@ import {
     getWeb3Provider,
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
+import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
 
 export const getProtectedData = {
     name: "get_protected_data",
@@ -22,13 +23,8 @@ export const getProtectedData = {
         required: [],
     },
     handler: async () => {
-        const privateKey = process.env.PRIVATE_KEY as string;
-
-        if (!privateKey) {
-            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-        }
-
         try {
+            const privateKey = await readWalletPrivateKey();
             const wallet = new Wallet(privateKey);
             const web3Provider = getWeb3Provider(privateKey);
 

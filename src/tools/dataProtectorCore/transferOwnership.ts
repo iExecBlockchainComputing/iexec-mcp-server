@@ -2,6 +2,7 @@ import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import {
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
+import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
 
 export const transferOwnership = {
     name: "transfer_ownership",
@@ -15,11 +16,7 @@ export const transferOwnership = {
         required: ["protectedData", "newOwner"],
     },
     handler: async (params: any) => {
-        const privateKey = process.env.PRIVATE_KEY as string;
 
-        if (!privateKey) {
-            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-        }
         const { protectedData, newOwner } = params;
 
         if (typeof protectedData !== "string" || typeof newOwner !== "string") {
@@ -30,6 +27,7 @@ export const transferOwnership = {
         }
 
         try {
+            const privateKey = await readWalletPrivateKey();
             const dataProtectorCore = new IExecDataProtectorCore(privateKey);
             const result = await dataProtectorCore.transferOwnership({
                 protectedData,

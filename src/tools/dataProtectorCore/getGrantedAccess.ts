@@ -1,5 +1,6 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
+import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
 
 export const getGrantedAccess = {
     name: "get_granted_access",
@@ -17,14 +18,10 @@ export const getGrantedAccess = {
         required: [],
     },
     handler: async (params: any) => {
-        const privateKey = process.env.PRIVATE_KEY as string;
-
-        if (!privateKey) {
-            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-        }
         const { protectedData, authorizedApp, authorizedUser } = params;
 
         try {
+            const privateKey = await readWalletPrivateKey();
             const web3Provider = getWeb3Provider(privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 

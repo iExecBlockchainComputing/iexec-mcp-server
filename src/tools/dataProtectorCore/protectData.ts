@@ -1,7 +1,7 @@
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { Wallet } from "ethers";
-import { z } from "zod";
+import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
 
 export const protectData = {
     name: "protect_data",
@@ -10,23 +10,21 @@ export const protectData = {
     inputSchema: {
         type: "object",
         properties: {
-            data: { type: "object" },              // Required: JSON object to protect
-            name: { type: "string" },              // Optional: Public name for the protected data
-            allowDebug: { type: "boolean" },       // Optional: Enable for dev/testing
+            data: { type: "object" },
+            name: { type: "string" },
+            allowDebug: { type: "boolean" },
         },
         required: ["data"],
     },
     handler: async (params: any) => {
-        const privateKey = process.env.PRIVATE_KEY;
-        if (!privateKey) {
-            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-        }
+
         const { data, name = "", allowDebug = false } = params;
         if (typeof data !== "object" || Array.isArray(data) || data === null) {
             throw new McpError(ErrorCode.InvalidParams, "Parameter 'data' must be a JSON object");
         }
 
         try {
+            const privateKey = await readWalletPrivateKey();
             const signer = new Wallet(privateKey);
             const web3Provider = getWeb3Provider(signer.privateKey);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);

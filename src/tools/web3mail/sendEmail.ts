@@ -1,5 +1,6 @@
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
 import { IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
+import { readWalletPrivateKey } from '../../utils/readWalletKeystore.js';
 
 export const sendEmail = {
     name: 'sendEmail',
@@ -20,11 +21,6 @@ export const sendEmail = {
         required: ['emailSubject', 'emailContent', 'protectedData'],
     },
     handler: async (params: any) => {
-        const privateKey = process.env.PRIVATE_KEY as string;
-
-        if (!privateKey) {
-            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-        }
         const {
             emailSubject,
             emailContent,
@@ -46,6 +42,7 @@ export const sendEmail = {
         }
 
         try {
+            const privateKey = await readWalletPrivateKey();
             const web3mail = new IExecWeb3mail(privateKey);
 
             const sendEmailParams: any = {
