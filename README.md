@@ -57,6 +57,24 @@ claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wall
 claude
 ```
 
+### 3.1. Direct npx Configuration for Claude Desktop
+
+You can also configure Claude Desktop directly to use the latest published package via npx:
+
+```json
+{
+  "mcpServers": {
+    "iexec-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@paypes/iexec-mcp@latest"],
+      "env": {
+        "PRIVATE_KEY_PATH": "~/Library/Ethereum/keystore/wallet.json"
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## 4. Local (Node.js)
