@@ -46,7 +46,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 **Prerequisites:**
 - [Node.js](https://nodejs.org/) (version 18 or higher)
 - npm (version 9 or higher)
-- [Claude Desktop](https://github.com/anthropics/claude-desktop/releases)
+- [Claude Desktop](https://claude.ai/download)
 
 **Setup Steps:**
 
@@ -127,7 +127,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 - [Node.js](https://nodejs.org/) (version 18 or higher)
 - npm (version 9 or higher)
 - [Git](https://git-scm.com/)
-- [Claude Desktop](https://github.com/anthropics/claude-desktop/releases) (optional)
+- [Claude Desktop](https://claude.ai/download) (optional)
 
 **Setup Steps:**
 
@@ -145,7 +145,7 @@ npm run build
 ### 5.2. Integrate with Claude Desktop (Optional)
 
 1. **Open Claude Desktop configuration:**
-   - Download and install [Claude Desktop](https://github.com/anthropics/claude-desktop/releases) if you haven't already
+   - Download and install [Claude Desktop](https://claude.ai/download) if you haven't already
    - Open Claude Desktop → **Developer > Edit Config**
 
 2. **Add configuration to `claude_desktop_config.json`:**
@@ -188,7 +188,7 @@ npm run build
 
 **Prerequisites:**
 - [Docker](https://www.docker.com/get-started) installed
-- [Claude Desktop](https://github.com/anthropics/claude-desktop/releases) (optional)
+- [Claude Desktop](https://claude.ai/download) (optional)
 
 **Setup Steps:**
 
