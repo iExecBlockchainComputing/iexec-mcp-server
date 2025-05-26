@@ -34,46 +34,14 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 
 | Method                                                                       | Description                        | Best For                           |
 | ---------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
-| **[3. Claude Code CLI](#3-method-a-claude-code-cli-setup)** ⭐               | Fastest setup with CLI integration | Developers using Claude Code       |
-| **[4. NPX Configuration](#4-method-b-npx-configuration-for-claude-desktop)** | Direct Claude Desktop setup        | Quick Claude Desktop integration   |
+| **[3. NPX Configuration](#3-method-a-npx-configuration-for-claude-desktop)** ⭐ | Direct Claude Desktop setup        | Quick Claude Desktop integration   |
+| **[4. Claude Code CLI](#4-method-b-claude-code-cli-setup)**               | CLI integration setup | Developers using Claude Code       |
 | **[5. Local Node.js](#5-method-c-local-nodejs-setup)**                       | Development from source            | Local development & debugging      |
 | **[6. Docker](#6-method-d-docker-setup)**                                    | Containerized deployment           | Production & isolated environments |
 
 ---
 
-## 3. Method A: Claude Code CLI Setup
-
-**Prerequisites:**
-- [Node.js](https://nodejs.org/) (version 18 or higher)
-- npm (version 9 or higher)
-
-**Setup Steps:**
-
-1. **Install Claude Code CLI:**
-   ```bash
-   npm install -g @anthropic-ai/claude-code
-   ```
-
-2. **Add iExec MCP server:**
-   
-   *With wallet file (from Section 1):*
-   ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wallet.json -- npx @paypes/iexec-mcp@latest run
-   ```
-   
-   *With direct private key:*
-   ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @paypes/iexec-mcp@latest run
-   ```
-
-3. **Run Claude:**
-   ```bash
-   claude
-   ```
-
----
-
-## 4. Method B: NPX Configuration for Claude Desktop
+## 3. Method A: NPX Configuration for Claude Desktop
 
 **Prerequisites:**
 - [Node.js](https://nodejs.org/) (version 18 or higher)
@@ -118,6 +86,38 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
    ```
 
 3. **Restart Claude Desktop** - You should see a plug icon for `iexec-mcp-server`
+
+---
+
+## 4. Method B: Claude Code CLI Setup
+
+**Prerequisites:**
+- [Node.js](https://nodejs.org/) (version 18 or higher)
+- npm (version 9 or higher)
+
+**Setup Steps:**
+
+1. **Install Claude Code CLI:**
+   ```bash
+   npm install -g @anthropic-ai/claude-code
+   ```
+
+2. **Add iExec MCP server:**
+   
+   *With wallet file (from Section 1):*
+   ```bash
+   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wallet.json -- npx @paypes/iexec-mcp@latest run
+   ```
+   
+   *With direct private key:*
+   ```bash
+   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @paypes/iexec-mcp@latest run
+   ```
+
+3. **Run Claude:**
+   ```bash
+   claude
+   ```
 
 ---
 
