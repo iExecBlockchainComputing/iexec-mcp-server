@@ -1,6 +1,6 @@
 # iExec MCP Server
 
-> A [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol) compatible server to interact with the [iExec](https://iex.ec) protocol — built for Claude, agents, and AI tooling.
+> A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) compatible server to interact with the [iExec](https://iex.ec) protocol — built for Claude, agents, and AI tooling.
 
 ---
 
