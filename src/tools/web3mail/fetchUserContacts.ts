@@ -1,5 +1,6 @@
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
 import { getWeb3Provider, IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
+import { readWalletPrivateKey } from '../../utils/readWalletKeystore.js';
 
 export const fetchUserContacts = {
     name: 'fetchUserContacts',
@@ -12,11 +13,8 @@ export const fetchUserContacts = {
         required: ['userAddress'],
     },
     handler: async (params: any) => {
-        const privateKey = process.env.PRIVATE_KEY as string;
+        const privateKey = await readWalletPrivateKey();
 
-        if (!privateKey) {
-            throw new McpError(ErrorCode.InternalError, "Missing PRIVATE_KEY in environment variables");
-        }
         const { userAddress } = params;
         if (typeof userAddress !== 'string') {
             throw new McpError(ErrorCode.InvalidParams, 'Invalid or missing parameters');
