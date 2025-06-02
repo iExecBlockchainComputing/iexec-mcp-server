@@ -1,86 +1,24 @@
 name: Publish to npm and Docker Hub
 
 on:
-  # Triggered when release-please creates a tag
   push:
     tags:
       - "v*"
-  # Triggered when a GitHub release is published (by release-please)
-  release:
-    types: [published]
-  # Manual trigger for testing
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release (e.g., 1.0.0)"
+        description: "Version (e.g., 1.0.0)"
         required: true
         type: string
-      tag:
-        description: "npm tag (latest, beta, alpha)"
-        required: false
-        default: "latest"
-        type: choice
-        options:
-          - latest
-          - beta
-          - alpha
 
 env:
-  REGISTRY: docker.io
   IMAGE_NAME: elpaypes/mcp-server
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.get-version.outputs.version }}
-      is-prerelease: ${{ steps.check-prerelease.outputs.is-prerelease }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get version from tag or input
-        id: get-version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            # Remove 'v' prefix from tag (v1.0.0 -> 1.0.0)
-            VERSION=${GITHUB_REF#refs/tags/v}
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
-
-      - name: Check if prerelease
-        id: check-prerelease
-        run: |
-          VERSION="${{ steps.get-version.outputs.version }}"
-          if [[ $VERSION =~ (alpha|beta|rc) ]]; then
-            echo "is-prerelease=true" >> $GITHUB_OUTPUT
-          else
-            echo "is-prerelease=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      # - name: Run tests
-      #   run: npm test
-
-      - name: Build project
-        run: npm run build
-
-  npm-release:
-    needs: validate
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -88,91 +26,53 @@ jobs:
         with:
           node-version: "18"
           registry-url: "https://registry.npmjs.org"
-          cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
-        run: npm run build
-
-      - name: Update package version
-        run: npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
-
-      - name: Determine npm tag
-        id: npm-tag
+      - name: Get version
+        id: version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TAG="${{ github.event.inputs.tag }}"
-          elif [[ "${{ needs.validate.outputs.version }}" =~ (alpha|beta|rc) ]]; then
-            if [[ "${{ needs.validate.outputs.version }}" =~ alpha ]]; then
-              TAG="alpha"
-            elif [[ "${{ needs.validate.outputs.version }}" =~ beta ]]; then
-              TAG="beta"
-            else
-              TAG="next"
-            fi
+            VERSION="${{ github.event.inputs.version }}"
           else
-            TAG="latest"
+            VERSION=${GITHUB_REF#refs/tags/v}
           fi
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-          echo "Publishing to npm with tag: $TAG"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
 
-      - name: Publish to npm @paypes
-        run: npm publish --tag ${{ steps.npm-tag.outputs.tag }}
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publish to npm
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [[ "$VERSION" =~ alpha ]]; then
+            npm publish --tag alpha
+          elif [[ "$VERSION" =~ beta ]]; then
+            npm publish --tag beta
+          else
+            npm publish --tag latest
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  docker-release:
-    needs: validate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
+      - name: Docker login
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ needs.validate.outputs.version }}
-            type=raw,value=latest
-
-      - name: Build and push Docker image to elpaypes
+      - name: Build and push Docker
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+            ${{ env.IMAGE_NAME }}:latest
 
-  notify:
-    needs: [validate, npm-release, docker-release]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Notify on success
-        if: needs.npm-release.result == 'success' && needs.docker-release.result == 'success'
+      - name: Success
         run: |
-          echo "✅ Successfully published v${{ needs.validate.outputs.version }}"
+          echo "✅ Published v${{ steps.version.outputs.version }}"
           echo "📦 npm: https://www.npmjs.com/package/@paypes/mcp-server"
           echo "🐳 Docker: https://hub.docker.com/r/elpaypes/mcp-server"
-
-      - name: Notify on failure
-        if: needs.npm-release.result == 'failure' || needs.docker-release.result == 'failure'
-        run: |
-          echo "❌ Publication failed for v${{ needs.validate.outputs.version }}"
-          exit 1
