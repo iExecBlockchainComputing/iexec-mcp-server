@@ -1,6 +1,10 @@
 import { promises as fs } from 'fs';
 import os from 'os';
 
+// uncomment the following line to use local .env file for local development
+//import dotenv from 'dotenv';
+//dotenv.config();
+
 export async function readWalletPrivateKey() {
     const envPrivateKey = process.env.PRIVATE_KEY;
     const rawPath = process.env.PRIVATE_KEY_PATH;
