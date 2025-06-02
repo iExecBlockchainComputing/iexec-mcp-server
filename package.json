@@ -1,12 +1,12 @@
 {
-  "name": "@paypes/iexec-mcp",
+  "name": "@paypes/mcp-server",
   "version": "0.0.5",
   "description": "MCP server for interacting with iExec Blockchain",
   "type": "module",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "bin": {
-    "iexec-mcp": "build/index.js",
+    "mcp-server": "build/index.js",
     "run": "build/index.js"
   },
   "homepage": "https://github.com/iExecBlockchainComputing/iexec-mcp-server",
