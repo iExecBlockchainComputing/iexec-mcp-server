@@ -1,5 +1,5 @@
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
-import { IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
+import { getWeb3Provider, IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
 import { readWalletPrivateKey } from '../../utils/readWalletKeystore.js';
 
 export const sendEmail = {
@@ -26,7 +26,7 @@ export const sendEmail = {
             emailContent,
             protectedData,
             workerpoolMaxPrice,
-            workerpoolAddressOrEns,
+            workerpoolAddressOrEns = "0x0975bfce90f4748dab6d6729c96b33a2cd5491f5",
             senderName,
             contentType,
             label,
@@ -43,7 +43,8 @@ export const sendEmail = {
 
         try {
             const privateKey = await readWalletPrivateKey();
-            const web3mail = new IExecWeb3mail(privateKey);
+            const web3Provider = getWeb3Provider(privateKey);
+            const web3mail = new IExecWeb3mail(web3Provider);
 
             const sendEmailParams: any = {
                 emailSubject,
@@ -57,11 +58,13 @@ export const sendEmail = {
             if (contentType !== undefined) sendEmailParams.contentType = contentType;
             if (label !== undefined) sendEmailParams.label = label;
             if (useVoucher !== undefined) sendEmailParams.useVoucher = useVoucher;
-
+            console.error("Send email params:", sendEmailParams);
             const response = await web3mail.sendEmail(sendEmailParams);
 
             return response;
         } catch (error: any) {
+            console.error("Error sending email:", error);
+            throw new McpError(ErrorCode.InternalError, error);
             if (error instanceof WorkflowError) {
                 if (error.isProtocolError) {
                     throw new McpError(ErrorCode.InternalError, error.message);

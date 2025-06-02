@@ -1,5 +1,6 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import {
+    getWeb3Provider,
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
@@ -28,7 +29,8 @@ export const transferOwnership = {
 
         try {
             const privateKey = await readWalletPrivateKey();
-            const dataProtectorCore = new IExecDataProtectorCore(privateKey);
+            const web3Provider = getWeb3Provider(privateKey);
+            const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
             const result = await dataProtectorCore.transferOwnership({
                 protectedData,
                 newOwner,
