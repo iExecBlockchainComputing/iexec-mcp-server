@@ -32,18 +32,19 @@ Find your wallet at:
 
 Complete the **Wallet Setup** above, then choose your preferred installation method:
 
-| Method                                                                       | Description                        | Best For                           |
-| ---------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------- |
-| **[3. NPX Configuration](#3-method-a-npx-configuration-for-claude-desktop)** ⭐ | Direct Claude Desktop setup        | Quick Claude Desktop integration   |
-| **[4. Claude Code CLI](#4-method-b-claude-code-cli-setup)**               | CLI integration setup | Developers using Claude Code       |
-| **[5. Local Node.js](#5-method-c-local-nodejs-setup)**                       | Development from source            | Local development & debugging      |
-| **[6. Docker](#6-method-d-docker-setup)**                                    | Containerized deployment           | Production & isolated environments |
+| Method                                                                          | Description                 | Best For                           |
+| ------------------------------------------------------------------------------- | --------------------------- | ---------------------------------- |
+| **[3. NPX Configuration](#3-method-a-npx-configuration-for-claude-desktop)** ⭐ | Direct Claude Desktop setup | Quick Claude Desktop integration   |
+| **[4. Claude Code CLI](#4-method-b-claude-code-cli-setup)**                     | CLI integration setup       | Developers using Claude Code       |
+| **[5. Local Node.js](#5-method-c-local-nodejs-setup)**                          | Development from source     | Local development & debugging      |
+| **[6. Docker](#6-method-d-docker-setup)**                                       | Containerized deployment    | Production & isolated environments |
 
 ---
 
 ## 3. Method A: NPX Configuration for Claude Desktop
 
 **Prerequisites:**
+
 - [Node.js](https://nodejs.org/) (version 18 or higher)
 - npm (version 9 or higher)
 - [Claude Desktop](https://claude.ai/download)
@@ -51,17 +52,19 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 **Setup Steps:**
 
 1. **Open Claude Desktop configuration:**
+
    - Open Claude Desktop → **Developer > Edit Config**
 
 2. **Add configuration to `claude_desktop_config.json`:**
-   
-   *With wallet file (from Section 1):*
+
+   _With wallet file (from Section 1):_
+
    ```json
    {
      "mcpServers": {
        "iexec-mcp-server": {
          "command": "npx",
-         "args": ["-y", "@paypes/iexec-mcp@latest"],
+         "args": ["-y", "@paypes/mcp-server@latest"],
          "env": {
            "PRIVATE_KEY_PATH": "/absolute/path/to/wallet.json"
          }
@@ -69,14 +72,15 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
      }
    }
    ```
-   
-   *With direct private key:*
+
+   _With direct private key:_
+
    ```json
    {
      "mcpServers": {
        "iexec-mcp-server": {
          "command": "npx",
-         "args": ["-y", "@paypes/iexec-mcp@latest"],
+         "args": ["-y", "@paypes/mcp-server@latest"],
          "env": {
            "PRIVATE_KEY": "0xYOUR_PRIVATE_KEY"
          }
@@ -92,26 +96,30 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 ## 4. Method B: Claude Code CLI Setup
 
 **Prerequisites:**
+
 - [Node.js](https://nodejs.org/) (version 18 or higher)
 - npm (version 9 or higher)
 
 **Setup Steps:**
 
 1. **Install Claude Code CLI:**
+
    ```bash
    npm install -g @anthropic-ai/claude-code
    ```
 
 2. **Add iExec MCP server:**
-   
-   *With wallet file (from Section 1):*
+
+   _With wallet file (from Section 1):_
+
    ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wallet.json -- npx @paypes/iexec-mcp@latest run
+   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wallet.json -- npx @paypes/mcp-server@latest run
    ```
-   
-   *With direct private key:*
+
+   _With direct private key:_
+
    ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @paypes/iexec-mcp@latest run
+   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @paypes/mcp-server@latest run
    ```
 
 3. **Run Claude:**
@@ -124,6 +132,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 ## 5. Method C: Local Node.js Setup
 
 **Prerequisites:**
+
 - [Node.js](https://nodejs.org/) (version 18 or higher)
 - npm (version 9 or higher)
 - [Git](https://git-scm.com/)
@@ -145,12 +154,14 @@ npm run build
 ### 5.2. Integrate with Claude Desktop (Optional)
 
 1. **Open Claude Desktop configuration:**
+
    - Download and install [Claude Desktop](https://claude.ai/download) if you haven't already
    - Open Claude Desktop → **Developer > Edit Config**
 
 2. **Add configuration to `claude_desktop_config.json`:**
-   
-   *With wallet file (from Section 1):*
+
+   _With wallet file (from Section 1):_
+
    ```json
    {
      "mcpServers": {
@@ -164,8 +175,9 @@ npm run build
      }
    }
    ```
-   
-   *With direct private key:*
+
+   _With direct private key:_
+
    ```json
    {
      "mcpServers": {
@@ -187,6 +199,7 @@ npm run build
 ## 6. Method D: Docker Setup
 
 **Prerequisites:**
+
 - [Docker](https://www.docker.com/get-started) installed
 - [Claude Desktop](https://claude.ai/download) (optional)
 
@@ -194,12 +207,14 @@ npm run build
 
 ### 6.1. Run the Server with Docker
 
-*With wallet file (from Section 1):*
+_With wallet file (from Section 1):_
+
 ```bash
 docker run -i --rm --init -e PRIVATE_KEY_PATH=/absolute/path/to/wallet.json iexec/mcp-server:latest
 ```
 
-*With direct private key:*
+_With direct private key:_
+
 ```bash
 docker run -i --rm --init -e PRIVATE_KEY=0xYOUR_PRIVATE_KEY iexec/mcp-server:latest
 ```
@@ -207,11 +222,13 @@ docker run -i --rm --init -e PRIVATE_KEY=0xYOUR_PRIVATE_KEY iexec/mcp-server:lat
 ### 6.2. Integrate with Claude Desktop (Optional)
 
 1. **Open Claude Desktop configuration:**
+
    - Open Claude Desktop → **Developer > Edit Config**
 
 2. **Add configuration to `claude_desktop_config.json`:**
-   
-   *With wallet file (from Section 1):*
+
+   _With wallet file (from Section 1):_
+
    ```json
    {
      "mcpServers": {
@@ -230,8 +247,9 @@ docker run -i --rm --init -e PRIVATE_KEY=0xYOUR_PRIVATE_KEY iexec/mcp-server:lat
      }
    }
    ```
-   
-   *With direct private key:*
+
+   _With direct private key:_
+
    ```json
    {
      "mcpServers": {
