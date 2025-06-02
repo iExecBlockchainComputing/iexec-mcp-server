@@ -1,0 +1,21 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "@paypes/mcp-server",
+      "component": "",
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "chore", "section": "Miscellaneous", "hidden": false },
+        { "type": "docs", "section": "Documentation", "hidden": false },
+        { "type": "ci", "section": "CI/CD", "hidden": false }
+      ],
+      "extra-files": ["package.json", "package-lock.json"]
+    }
+  },
+  "tag-separator": "",
+  "include-component-in-tag": false,
+  "bootstrap-sha": "$(git rev-parse HEAD)",
+  "last-release-sha": "$(git rev-parse HEAD)"
+}
