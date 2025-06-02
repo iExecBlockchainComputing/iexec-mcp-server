@@ -1,0 +1,18 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "@paypes/iexec-mcp",
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "chore", "section": "Miscellaneous", "hidden": false },
+        { "type": "docs", "section": "Documentation", "hidden": false },
+        { "type": "ci", "section": "CI/CD", "hidden": false }
+      ],
+      "extra-files": ["package.json", "package-lock.json"]
+    }
+  },
+  "bootstrap-sha": "$(git rev-parse HEAD)",
+  "last-release-sha": "$(git rev-parse HEAD)"
+}
