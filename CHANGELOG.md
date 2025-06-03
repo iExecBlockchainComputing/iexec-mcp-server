@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.1.0-alpha.2](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.1...mcp-server-v0.1.0-alpha.2) (2025-06-03)
+
+
+### 🐞 Bug Fixes
+
+* correct MCP tool response format to use content array ([1798234](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/1798234195e6dff12698f322e166c9b33eda27b4))
+
+
+### 🧰 Other
+
+* bump v0.1.0-alpha.1 ([0bdded9](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/0bdded9f6eebd3265f93453041a2f546b316d058))
+* configure prerelease ([b157d2b](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/b157d2b7453c3eff0382c7e28a29886c926ad3a7))
+* fix dockerhub username ([f06cdce](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/f06cdcec314be564942cc177c86202df1d17f4ad))
+* prepare releases ([#26](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/26)) ([1aa953e](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/1aa953ea325986cf2bba4004c8180c3fe963cebb))
+* rename bin ([c92433d](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/c92433dc6c6c9bad5c5b589386f47b17b30c6e9b))
+* rename project from my-mcp-server to iexec-mcp-local-server ([3810eec](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/3810eec378826e7686d1e7df59c8802fd3dcb7ca))
+* update conventional-commit check ([#25](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/25)) ([4cb0570](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/4cb057050836501e3d770c6f2a4d7c7c98537f5c))
+* update release-please config ([#22](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/22)) ([85d4d76](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/85d4d76d046611686fd88ed9d526c3a83879cff4))
+
 ## [0.1.1-alpha.1](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.1...mcp-server-v0.1.1-alpha.1) (2025-06-02)
 
 
