@@ -1,18 +1,30 @@
 {
-  "name": "@paypes/mcp-server",
+  "name": "@iexec/mcp-server",
   "version": "0.1.0-alpha.1",
-  "description": "MCP server for interacting with iExec Blockchain",
+  "description": "iExec MCP Server - Model Context Protocol server for iExec blockchain confidential computing",
+  "keywords": [
+    "mcp",
+    "iExec",
+    "blockchain",
+    "confidential-computing",
+    "web3mail",
+    "dataprotector"
+  ],
+  "author": "iExec Team",
+  "homepage": "https://github.com/iExecBlockchainComputing/iexec-mcp-server",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iExecBlockchainComputing/iexec-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues"
+  },
   "type": "module",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "bin": {
     "mcp-server": "build/index.js",
     "run": "build/index.js"
-  },
-  "homepage": "https://github.com/iExecBlockchainComputing/iexec-mcp-server",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/iExecBlockchainComputing/iexec-mcp-server.git"
   },
   "files": [
     "build",
@@ -25,6 +37,10 @@
     "watch": "tsc --watch",
     "run": "node build/index.js",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "license": "MIT",
   "dependencies": {

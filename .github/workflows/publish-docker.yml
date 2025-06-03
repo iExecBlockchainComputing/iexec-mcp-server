@@ -1,0 +1,15 @@
+name: Publish Docker Image
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: iExecBlockchainComputing/github-actions-workflows/.github/workflows/docker-build.yml@docker-build-v1.1.1
+    with:
+      dockerfile: "Dockerfile"
+      image-name: "iexec/mcp-server"
+    secrets:
+      dockerhub-username: ${{ secrets.dockerhub_user }}
+      dockerhub-pat: ${{ secrets.dockerhub-pat }}
