@@ -23,8 +23,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "bin": {
-    "mcp-server": "build/index.js",
-    "run": "build/index.js"
+    "iexec-mcp": "build/index.js"
   },
   "files": [
     "build",

@@ -120,13 +120,13 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
    _With wallet file (from Section 1):_
 
    ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json -- npx @iexec/mcp-server@latest run
+   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json -- npx @iexec/mcp-server@latest iexec-mcp
    ```
 
    _With direct private key:_
 
    ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @iexec/mcp-server@latest run
+   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @iexec/mcp-server@latest iexec-mcp
    ```
 
 3. **Run Claude:**
