@@ -23,5 +23,8 @@
       "release-type": "node",
       "changelog-path": "CHANGELOG.md"
     }
-  }
+  },
+  "prerelease": true,
+  "prerelease-type": "alpha",
+  "versioning": "prerelease"
 }
