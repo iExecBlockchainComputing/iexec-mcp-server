@@ -2,7 +2,7 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "package-name": "@paypes/mcp-server",
+      "package-name": "@iexec/mcp-server",
       "component": "",
       "changelog-sections": [
         { "type": "feat", "section": "Features" },

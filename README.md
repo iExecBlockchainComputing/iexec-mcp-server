@@ -6,6 +6,11 @@
 
 ## 1. Wallet Setup
 
+**Prerequisites:**
+
+- [Node.js](https://nodejs.org/) (version 18 or higher)
+- npm (version 9 or higher)
+
 **Option 1: Create a new wallet with iExec**
 
 ```bash
@@ -27,6 +32,8 @@ Find your wallet at:
   echo '{"privateKey":"0xYOUR_PRIVATE_KEY"}' > ./my-wallet/wallet.json
   ```
 - Or use your raw private key directly in Claude configuration.
+
+> **Important:** All sensitive configuration (PRIVATE_KEY_PATH or PRIVATE_KEY) is used only at the local MCP server level and is **never** transmitted to Claude or any other AI model. This information remains strictly confidential on your local machine.
 
 ## 2. Getting Started
 
@@ -64,9 +71,9 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
      "mcpServers": {
        "iexec-mcp-server": {
          "command": "npx",
-         "args": ["-y", "@paypes/mcp-server@latest"],
+         "args": ["-y", "@iexec/mcp-server@latest"],
          "env": {
-           "PRIVATE_KEY_PATH": "/absolute/path/to/wallet.json"
+           "PRIVATE_KEY_PATH": "/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json"
          }
        }
      }
@@ -80,7 +87,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
      "mcpServers": {
        "iexec-mcp-server": {
          "command": "npx",
-         "args": ["-y", "@paypes/mcp-server@latest"],
+         "args": ["-y", "@iexec/mcp-server@latest"],
          "env": {
            "PRIVATE_KEY": "0xYOUR_PRIVATE_KEY"
          }
@@ -113,13 +120,13 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
    _With wallet file (from Section 1):_
 
    ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=~/Library/Ethereum/keystore/wallet.json -- npx @paypes/mcp-server@latest run
+   claude mcp add iexec-mcp --env PRIVATE_KEY_PATH=/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json -- npx @iexec/mcp-server@latest run
    ```
 
    _With direct private key:_
 
    ```bash
-   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @paypes/mcp-server@latest run
+   claude mcp add iexec-mcp --env PRIVATE_KEY=0xYOUR_PRIVATE_KEY -- npx @iexec/mcp-server@latest run
    ```
 
 3. **Run Claude:**
@@ -136,26 +143,23 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 - [Node.js](https://nodejs.org/) (version 18 or higher)
 - npm (version 9 or higher)
 - [Git](https://git-scm.com/)
-- [Claude Desktop](https://claude.ai/download) (optional)
+- [Claude Desktop](https://claude.ai/download)
 
 **Setup Steps:**
 
 ### 5.1. Clone, Install, and Build
 
 ```bash
-git clone https://github.com/iexec-blockchain-computing/iexec-mcp-server.git
+git clone https://github.com/iexecBlockchainComputing/iexec-mcp-server.git
 cd iexec-mcp-server
 npm install
 npm run build
 ```
 
-> All configuration (PRIVATE_KEY_PATH or PRIVATE_KEY) is set in the Claude config, not as shell variables.
-
-### 5.2. Integrate with Claude Desktop (Optional)
+### 5.2. Integrate with Claude Desktop
 
 1. **Open Claude Desktop configuration:**
 
-   - Download and install [Claude Desktop](https://claude.ai/download) if you haven't already
    - Open Claude Desktop → **Developer > Edit Config**
 
 2. **Add configuration to `claude_desktop_config.json`:**
@@ -167,9 +171,9 @@ npm run build
      "mcpServers": {
        "iexec-mcp-server": {
          "command": "node",
-         "args": ["/absolute/path/to/iexec-mcp-server/build/index.js"],
+         "args": ["/ABSOLUTE/PATH/TO-IEXEC-MCP-SERVER-REPO/build/index.js"],
          "env": {
-           "PRIVATE_KEY_PATH": "/absolute/path/to/wallet.json"
+           "PRIVATE_KEY_PATH": "/ABSOLUTE/PATH/TO/wallet.json"
          }
        }
      }
@@ -183,7 +187,7 @@ npm run build
      "mcpServers": {
        "iexec-mcp-server": {
          "command": "node",
-         "args": ["/absolute/path/to/iexec-mcp-server/build/index.js"],
+         "args": ["/ABSOLUTE/PATH/TO-IEXEC-MCP-SERVER-REPO/build/index.js"],
          "env": {
            "PRIVATE_KEY": "0xYOUR_PRIVATE_KEY"
          }
@@ -201,29 +205,11 @@ npm run build
 **Prerequisites:**
 
 - [Docker](https://www.docker.com/get-started) installed
-- [Claude Desktop](https://claude.ai/download) (optional)
-
-**Setup Steps:**
-
-### 6.1. Run the Server with Docker
-
-_With wallet file (from Section 1):_
-
-```bash
-docker run -i --rm --init -e PRIVATE_KEY_PATH=/absolute/path/to/wallet.json iexec/mcp-server:latest
-```
-
-_With direct private key:_
-
-```bash
-docker run -i --rm --init -e PRIVATE_KEY=0xYOUR_PRIVATE_KEY iexec/mcp-server:latest
-```
-
-### 6.2. Integrate with Claude Desktop (Optional)
+- [Claude Desktop](https://claude.ai/download)
 
 1. **Open Claude Desktop configuration:**
 
-   - Open Claude Desktop → **Developer > Edit Config**
+- Open Claude Desktop → **Developer > Edit Config**
 
 2. **Add configuration to `claude_desktop_config.json`:**
 
@@ -239,9 +225,11 @@ docker run -i --rm --init -e PRIVATE_KEY=0xYOUR_PRIVATE_KEY iexec/mcp-server:lat
            "-i",
            "--rm",
            "--init",
+           "-v",
+           "/ABSOLUTE/PATH/TO/YOUR/KEYSTORE:/app/keystore",
            "-e",
-           "PRIVATE_KEY_PATH=/absolute/path/to/wallet.json",
-           "iexec/mcp-server:latest"
+           "PRIVATE_KEY_PATH=/app/keystore/wallet.json",
+           "iexechub/mcp-server:latest"
          ]
        }
      }
