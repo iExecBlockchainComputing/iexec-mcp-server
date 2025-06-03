@@ -9,7 +9,7 @@ jobs:
     uses: iExecBlockchainComputing/github-actions-workflows/.github/workflows/docker-build.yml@docker-build-v1.1.1
     with:
       dockerfile: "Dockerfile"
-      image-name: "iexec/mcp-server"
+      image-name: "iexechub/mcp-server"
     secrets:
       dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub-pat: ${{ secrets.DOCKERHUB_TOKEN }}

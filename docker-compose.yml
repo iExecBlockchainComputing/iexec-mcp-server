@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mcp-server:
-    image: iexec/mcp-server:latest
+    image: iexechub/mcp-server:latest
     build: .
     container_name: iexec-mcp-server
     environment:

@@ -250,7 +250,7 @@ npm run build
            "--init",
            "-e",
            "PRIVATE_KEY=0xYOUR_PRIVATE_KEY",
-           "iexec/mcp-server:latest"
+           "iexechub/mcp-server:latest"
          ]
        }
      }
