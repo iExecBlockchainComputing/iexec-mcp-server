@@ -11,5 +11,5 @@ jobs:
       dockerfile: "Dockerfile"
       image-name: "iexec/mcp-server"
     secrets:
-      dockerhub-username: ${{ secrets.dockerhub_user }}
-      dockerhub-pat: ${{ secrets.dockerhub-pat }}
+      dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub-pat: ${{ secrets.DOCKERHUB_TOKEN }}
