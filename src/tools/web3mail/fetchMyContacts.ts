@@ -17,7 +17,8 @@ export const fetchMyContacts = {
             const privateKey = await readWalletPrivateKey();
             const web3Provider = getWeb3Provider(privateKey);
             const web3mail = new IExecWeb3mail(web3Provider);
-            const contacts = await web3mail.fetchMyContacts();
+            const contacts = await web3mail.fetchMyContacts({ isUserStrict: true }
+            );
             return {
                 message: "Contacts fetched successfully",
                 contacts

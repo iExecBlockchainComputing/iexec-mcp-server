@@ -14,7 +14,7 @@ export const getIExecApps = {
             web3mail: {
                 ens: "web3mail.apps.iexec.eth",
                 address: "0x0d8b899f2faa0fe9f0b17bcf4debd0cbc9e574ef",
-                whitelistAddress: "0x1234567890abcdef1234567890abcdef12345678",
+                whitelistAddress: "0x781482C39CcE25546583EaC4957Fb7Bf04C277D2",
                 aliases: ["web3mail", "web3 mail", "web3-mail"],
             },
             web3telegram: {
