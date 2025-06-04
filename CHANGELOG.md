@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-alpha.10](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2025-06-04)
+
+
+### 🚀 Features
+
+* add multi-platform support for Docker builds ([#43](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/43)) ([e3ffa3e](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/e3ffa3e73f798bc08bbf211576b3e748c5421f14))
+
 ## [0.1.0-alpha.9](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2025-06-04)
 
 
