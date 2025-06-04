@@ -24,7 +24,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PAT }}
 
       - name: Get version
         id: version
@@ -42,7 +42,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: iexechub/mcp-server:v${{ steps.version.outputs.version }}
+          tags: |
+            iexechub/mcp-server:latest
+            iexechub/mcp-server:v${{ steps.version.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
