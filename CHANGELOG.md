@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-alpha.11](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2025-06-04)
+
+
+### 🐞 Bug Fixes
+
+* fetchMyContacts ([#45](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/45)) ([218950c](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/218950cfde427a29ec2bf84675ca796cb441c5c9))
+
 ## [0.1.0-alpha.10](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2025-06-04)
 
 
