@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0-alpha.9](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2025-06-04)
+
+
+### 🐞 Bug Fixes
+
+* dockerhub token name ([#42](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/42)) ([290ab28](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/290ab283f58dd6af2499ad0342d6f83841ead7a2))
+
+
+### ✨ Polish
+
+* use wallet address from env variable instead of parameter ([#40](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/40)) ([a2daeba](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/a2daeba7f66d4afb65cacf6e1e4eaec02f8fda3f))
+
 ## [0.1.0-alpha.8](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2025-06-04)
 
 
