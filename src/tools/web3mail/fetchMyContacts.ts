@@ -8,7 +8,9 @@ export const fetchMyContacts = {
     inputSchema: {
         type: "object",
         properties: {
+            query: { type: "string" },
         },
+        required: [],
     },
     handler: async () => {
         try {

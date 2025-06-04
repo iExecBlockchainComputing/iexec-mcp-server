@@ -1,5 +1,5 @@
 import { McpError, ErrorCode } from '@modelcontextprotocol/sdk/types.js';
-import { getWeb3Provider, IExecWeb3mail, WorkflowError } from '@iexec/web3mail';
+import { getWeb3Provider, IExecWeb3mail } from '@iexec/web3mail';
 import { readWalletPrivateKey } from '../../utils/readWalletKeystore.js';
 
 export const sendEmail = {
@@ -58,21 +58,11 @@ export const sendEmail = {
             if (contentType !== undefined) sendEmailParams.contentType = contentType;
             if (label !== undefined) sendEmailParams.label = label;
             if (useVoucher !== undefined) sendEmailParams.useVoucher = useVoucher;
-            console.error("Send email params:", sendEmailParams);
             const response = await web3mail.sendEmail(sendEmailParams);
-
             return response;
         } catch (error: any) {
             console.error("Error sending email:", error);
             throw new McpError(ErrorCode.InternalError, error);
-            if (error instanceof WorkflowError) {
-                if (error.isProtocolError) {
-                    throw new McpError(ErrorCode.InternalError, error.message);
-                } else {
-                    throw new McpError(ErrorCode.InvalidParams, error.message);
-                }
-            }
-            throw new McpError(ErrorCode.InternalError, error.message);
         }
     },
 };

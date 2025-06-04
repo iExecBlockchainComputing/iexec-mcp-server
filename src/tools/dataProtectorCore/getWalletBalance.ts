@@ -1,5 +1,7 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getIexecProvider } from "../../utils/provider.js";
+import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
+import { Wallet } from "ethers";
 
 export const getWalletBalance = {
     name: "get_wallet_balance",
@@ -7,16 +9,13 @@ export const getWalletBalance = {
     inputSchema: {
         type: "object",
         properties: {
-            wallet: { type: "string" }
+            query: { type: "string" }
         },
-        required: ["wallet"],
+        required: [],
     },
-    handler: async (params: any) => {
-        const { wallet } = params;
-
-        if (!wallet || !wallet.match(/^0x[a-fA-F0-9]{40}$/)) {
-            throw new McpError(ErrorCode.InvalidParams, "Invalid or missing wallet address");
-        }
+    handler: async () => {
+        const privateKey = await readWalletPrivateKey();
+        const wallet = new Wallet(privateKey);
 
         try {
             const iexecResponse = await getIexecProvider();
@@ -26,15 +25,15 @@ export const getWalletBalance = {
 
             const iexec = iexecResponse.data.iexec;
 
-            const balance = await iexec.account.checkBalance(wallet);
+            const balance = await iexec.account.checkBalance(wallet.address);
             const stakeRLC = Number(balance.stake) * 1e-9;
             const lockedRLC = Number(balance.locked) * 1e-9;
 
-            const { nRLC } = await iexec.wallet.checkBalances(wallet);
+            const { nRLC } = await iexec.wallet.checkBalances(wallet.address);
             const onChainRLC = Number(nRLC) * 1e-9;
 
             return {
-                wallet,
+                wallet: wallet.address,
                 onChainRLC,
                 stakeRLC,
                 lockedRLC
