@@ -1,6 +1,6 @@
 {
   "name": "@iexec/mcp-server",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "description": "iExec MCP Server - Model Context Protocol server for iExec blockchain confidential computing",
   "keywords": [
     "mcp",
