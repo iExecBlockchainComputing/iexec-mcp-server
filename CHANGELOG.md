@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-alpha.4](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.3...mcp-server-v0.1.0-alpha.4) (2025-06-04)
+
+
+### 🐞 Bug Fixes
+
+* correct docker image name ([#30](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/30)) ([e00e0a8](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/e00e0a8aa23af6d6b1895d4cdc4ce441c7e43fed))
+
 ## [0.1.0-alpha.3](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.2...mcp-server-v0.1.0-alpha.3) (2025-06-04)
 
 
