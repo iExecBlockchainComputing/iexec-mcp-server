@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-alpha.7](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.6...mcp-server-v0.1.0-alpha.7) (2025-06-04)
+
+
+### 🐞 Bug Fixes
+
+* dockerhub secret variable names ([#36](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/36)) ([dc21755](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/dc21755b086510e1a2638e63c4eca2a7302e96d2))
+
 ## [0.1.0-alpha.6](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.5...mcp-server-v0.1.0-alpha.6) (2025-06-04)
 
 
