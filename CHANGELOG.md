@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.0-alpha.3](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.2...mcp-server-v0.1.0-alpha.3) (2025-06-04)
+
+
+### 🚀 Features
+
+* Add custom publish workflows ([#27](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/27)) ([deb9e2e](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/deb9e2edf2fb23f333be2f9c0a764ebd93f1f3c9))
+* add custom publish workflows for npm and docker ([deb9e2e](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/deb9e2edf2fb23f333be2f9c0a764ebd93f1f3c9))
+
+
+### 🐞 Bug Fixes
+
+* correct version extraction in docker workflow ([c9e1b78](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/c9e1b78b74f900bbfb41aeb38fb0b21362577f8a))
+* Correct version extraction in publish workflows ([#29](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/29)) ([c9e1b78](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/c9e1b78b74f900bbfb41aeb38fb0b21362577f8a))
+
 ## [0.1.0-alpha.2](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.1...mcp-server-v0.1.0-alpha.2) (2025-06-03)
 
 
