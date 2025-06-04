@@ -12,7 +12,7 @@ on:
         type: string
 
 env:
-  IMAGE_NAME: iexec/mcp-server
+  IMAGE_NAME: iexechub/mcp-server
 
 jobs:
   publish-docker:
