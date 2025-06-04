@@ -1,5 +1,7 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getIexecProvider } from "../../utils/provider.js";
+import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
+import { Wallet } from "ethers";
 
 export const getUserVoucher = {
     name: "get_user_voucher",
@@ -7,18 +9,17 @@ export const getUserVoucher = {
     inputSchema: {
         type: "object",
         properties: {
-            wallet: { type: "string" }
+            query: { type: "string" },
         },
-        required: ["wallet"],
+        required: [],
     },
-    handler: async (params: any) => {
-        const { wallet } = params;
+    handler: async () => {
 
-        if (!wallet || !wallet.match(/^0x[a-fA-F0-9]{40}$/)) {
-            throw new McpError(ErrorCode.InvalidParams, "Invalid or missing wallet address");
-        }
+        const privateKey = await readWalletPrivateKey();
+        const wallet = new Wallet(privateKey);
 
         try {
+
             const iexecResponse = await getIexecProvider();
             if (!iexecResponse.success || !iexecResponse.data) {
                 throw new Error(iexecResponse.error || "Failed to initialize iExec SDK");
@@ -26,7 +27,7 @@ export const getUserVoucher = {
 
             const iexec = iexecResponse.data.iexec;
 
-            const userVoucher = await iexec.voucher.showUserVoucher(wallet);
+            const userVoucher = await iexec.voucher.showUserVoucher(wallet.address);
 
             return {
                 address: userVoucher.address,
@@ -41,7 +42,7 @@ export const getUserVoucher = {
         } catch (error: any) {
             if (error.message.includes("No Voucher found")) {
                 return {
-                    message: `No voucher found for wallet ${wallet}. Go to iExec discord to claim your voucher: https://discord.com/invite/aXH5ym5H4k`
+                    message: `No voucher found for wallet ${wallet.address}. Go to iExec discord to claim your voucher: https://discord.com/invite/aXH5ym5H4k`
                 };
             }
             throw new McpError(ErrorCode.InternalError, error.message);
