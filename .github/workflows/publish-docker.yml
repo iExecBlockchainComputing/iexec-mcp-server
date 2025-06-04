@@ -44,7 +44,7 @@ jobs:
           push: true
           tags: |
             iexechub/mcp-server:latest
-            iexechub/mcp-server:mcp-server-v${{ steps.version.outputs.version }}
+            iexechub/mcp-server:v${{ steps.version.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
