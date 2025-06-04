@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.0-alpha.5](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.4...mcp-server-v0.1.0-alpha.5) (2025-06-04)
+
+
+### 🐞 Bug Fixes
+
+* update npm & docker publish workflow to trigger only on releases ([535e4b5](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/535e4b5ddd4d45331ee13566b027e03cf12802c0))
+* Update npm publish & docker workflow triggers ([#32](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/32)) ([535e4b5](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/535e4b5ddd4d45331ee13566b027e03cf12802c0))
+
 ## [0.1.0-alpha.4](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/mcp-server-v0.1.0-alpha.3...mcp-server-v0.1.0-alpha.4) (2025-06-04)
 
 
