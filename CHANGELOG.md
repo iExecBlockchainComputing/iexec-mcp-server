@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-alpha.12](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2025-08-29)
+
+
+### 🚀 Features
+
+* add Cursor IDE configuration instructions to README ([#49](https://github.com/iExecBlockchainComputing/iexec-mcp-server/issues/49)) ([93c2a46](https://github.com/iExecBlockchainComputing/iexec-mcp-server/commit/93c2a46d8d8e98518f3e8daa0a0a7291173280ac))
+
 ## [0.1.0-alpha.11](https://github.com/iExecBlockchainComputing/iexec-mcp-server/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2025-06-04)
 
 
