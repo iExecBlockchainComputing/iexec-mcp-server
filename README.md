@@ -45,6 +45,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 | **[4. Claude Code CLI](#4-method-b-claude-code-cli-setup)**                     | CLI integration setup       | Developers using Claude Code       |
 | **[5. Local Node.js](#5-method-c-local-nodejs-setup)**                          | Development from source     | Local development & debugging      |
 | **[6. Docker](#6-method-d-docker-setup)**                                       | Containerized deployment    | Production & isolated environments |
+| **[7. Cursor IDE](#7-method-e-cursor-ide-setup)**                               | Cursor IDE integration      | Developers using Cursor IDE        |
 
 ---
 
@@ -261,7 +262,100 @@ npm run build
 
 ---
 
-## 7. Available Tools & API
+## 7. Method E: Cursor IDE Setup
+
+**Prerequisites:**
+
+- [Node.js](https://nodejs.org/) (version 18 or higher)
+- npm (version 9 or higher)
+- [Cursor](https://cursor.sh/) IDE installed
+
+**Setup Steps:**
+
+### 7.1. Install iExec MCP Server
+
+```bash
+npm install -g @iexec/mcp-server
+```
+
+### 7.2. Configure Cursor
+
+1. **Open Cursor Settings:**
+
+   - Press `Cmd+,` (macOS) or `Ctrl+,` (Windows/Linux)
+   - Or go to **Cursor > Preferences > Settings**
+
+2. **Search for "MCP" in settings:**
+
+   - Look for "Model Context Protocol" or "MCP" settings
+
+3. **Add MCP Server Configuration:**
+
+   **Option A: Using Settings UI (if available):**
+
+   - Add a new MCP server entry
+   - Set the command to: `@iexec/mcp-server`
+   - Add environment variables:
+     - `PRIVATE_KEY_PATH`: `/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json`
+     - Or `PRIVATE_KEY`: `0xYOUR_PRIVATE_KEY`
+
+   **Option B: Manual Configuration:**
+
+   - Open Cursor's configuration file (usually in user settings)
+   - Add the following configuration:
+
+   ```json
+   {
+     "mcpServers": {
+       "iexec-mcp-server": {
+         "command": "npx",
+         "args": ["-y", "@iexec/mcp-server@latest"],
+         "env": {
+           "PRIVATE_KEY_PATH": "/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json"
+         }
+       }
+     }
+   }
+   ```
+
+   **Option C: Using Cursor's AI Features:**
+
+   - Open the AI chat panel in Cursor
+   - Type: "Configure MCP server for iExec with private key path: /path/to/wallet.json"
+   - Cursor should help you set up the configuration
+
+4. **Restart Cursor** - The iExec MCP server should now be available in your AI interactions
+
+### 7.3. Alternative: Local Development Setup
+
+If you prefer to run from source:
+
+```bash
+git clone https://github.com/iexecBlockchainComputing/iexec-mcp-server.git
+cd iexec-mcp-server
+npm install
+npm run build
+```
+
+Then configure Cursor to use the local build:
+
+```json
+{
+  "mcpServers": {
+    "iexec-mcp-server": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO-IEXEC-MCP-SERVER-REPO/build/index.js"],
+      "env": {
+        "PRIVATE_KEY_PATH": "/ABSOLUTE/PATH/TO/wallet.json"
+      }
+    }
+  }
+}
+```
+
+---
+
+## 9. Available Tools & API
 
 - **Confidential Data:** `protectData`, `getProtectedData`, `processProtectedData`
 - **Data Governance:** `grantAccess`, `revokeOneAccess`, `revokeAllAccess`, `transferOwnership`, `getGrantedAccess`
@@ -272,7 +366,7 @@ npm run build
 
 ---
 
-## 8. Example Prompts
+## 10. Example Prompts
 
 - "Please protect my email address `alice@example.com` with the name `iexec-mcp-email-demo`."
 - "List all protected data tied to my wallet."
@@ -288,7 +382,7 @@ npm run build
 
 ---
 
-## 9. Security & Best Practices
+## 11. Security & Best Practices
 
 - For production, use `PRIVATE_KEY_PATH` and keep your wallet file secure.
 - Never commit your private key or wallet file to source control.
@@ -297,7 +391,7 @@ npm run build
 
 ---
 
-## 10. Help & Resources
+## 12. Help & Resources
 
 - [iExec Developer Docs](https://docs.iex.ec)
 - [Join iExec on Discord](https://discord.iex.ec)
@@ -305,6 +399,6 @@ npm run build
 
 ---
 
-## 11. Contributing
+## 13. Contributing
 
 Contributions welcome! Open an issue or PR to suggest improvements.
