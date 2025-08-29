@@ -12,6 +12,8 @@ import {
 import {
     CallToolRequestSchema,
     ListToolsRequestSchema,
+    ListResourcesRequestSchema,
+    ReadResourceRequestSchema,
     McpError,
     ErrorCode,
 } from "@modelcontextprotocol/sdk/types.js";
@@ -60,7 +62,24 @@ export async function startServer(): Promise<void> {
         },
         {
             capabilities: {
-                resources: {},
+                resources: {
+                    "iexec-docs://": {
+                        description: "Documentation iExec officielle - Guides, tutoriels et références",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                content: {
+                                    type: "string",
+                                    description: "Contenu du document en Markdown"
+                                },
+                                mimeType: {
+                                    type: "string",
+                                    description: "Type MIME du document (text/markdown)"
+                                }
+                            }
+                        }
+                    }
+                },
                 tools: {},
             },
         }
@@ -74,6 +93,87 @@ export async function startServer(): Promise<void> {
             inputSchema,
         })),
     }));
+
+    // Register resources
+    server.setRequestHandler(ListResourcesRequestSchema, async () => {
+        try {
+            const { readdir, stat } = await import('fs/promises');
+            const { resolve, join } = await import('path');
+
+            const docsPath = resolve('./documentation');
+            const resources: any[] = [];
+
+            // Fonction récursive pour scanner la documentation
+            async function scanDocs(dir: string, prefix: string = '') {
+                const items = await readdir(dir);
+
+                for (const item of items) {
+                    if (item.startsWith('.') || item === 'node_modules' || item === 'build' || item === 'dist') {
+                        continue;
+                    }
+
+                    const fullPath = join(dir, item);
+                    const stats = await stat(fullPath);
+                    const relativePath = prefix ? `${prefix}/${item}` : item;
+
+                    if (stats.isDirectory()) {
+                        await scanDocs(fullPath, relativePath);
+                    } else if (item.endsWith('.md')) {
+                        resources.push({
+                            uri: `iexec-docs://${relativePath}`,
+                            name: item.replace('.md', ''),
+                            description: `Documentation iExec: ${relativePath}`,
+                            mimeType: 'text/markdown'
+                        });
+                    }
+                }
+            }
+
+            await scanDocs(docsPath);
+
+            return { resources };
+        } catch (error) {
+            console.error('Erreur lors de la liste des ressources:', error);
+            return { resources: [] };
+        }
+    });
+
+    server.setRequestHandler(ReadResourceRequestSchema, async (request: any) => {
+        try {
+            const uri = request.params.uri;
+
+            if (uri.startsWith('iexec-docs://')) {
+                const filePath = uri.replace('iexec-docs://', '');
+                const { readFile } = await import('fs/promises');
+                const { resolve, join } = await import('path');
+
+                const docsPath = resolve('./documentation');
+                const fullPath = join(docsPath, filePath);
+
+                // Vérifier que le fichier est dans le dossier de documentation
+                if (!fullPath.startsWith(docsPath)) {
+                    throw new McpError(ErrorCode.InvalidRequest, 'Accès non autorisé');
+                }
+
+                const content = await readFile(fullPath, 'utf-8');
+
+                return {
+                    contents: [{
+                        uri,
+                        mimeType: 'text/markdown',
+                        text: content
+                    }]
+                };
+            }
+
+            throw new McpError(ErrorCode.InvalidRequest, 'Ressource non trouvée');
+        } catch (error) {
+            if (error instanceof McpError) {
+                throw error;
+            }
+            throw new McpError(ErrorCode.InternalError, `Erreur lors de la lecture de la ressource: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    });
 
     server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
         const tool = tools.find((t) => t.name === request.params.name);
