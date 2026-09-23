@@ -18,7 +18,6 @@ import {
 
 // Import all tools
 import { protectData } from "./tools/dataProtectorCore/protectData.js";
-import { getUserVoucher } from "./tools/dataProtectorCore/getUserVoucher.js";
 import { getWalletBalance } from "./tools/dataProtectorCore/getWalletBalance.js";
 import { getProtectedData } from "./tools/dataProtectorCore/getProtectedData.js";
 import { transferOwnership } from "./tools/dataProtectorCore/transferOwnership.js";
@@ -45,7 +44,6 @@ const tools = [
     revokeAllAccess,
     fetchUserContacts,
     fetchMyContacts,
-    getUserVoucher,
     getWalletBalance,
 ];
 

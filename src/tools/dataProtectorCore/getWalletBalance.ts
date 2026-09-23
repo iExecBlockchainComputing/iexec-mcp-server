@@ -1,11 +1,12 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getIexecProvider } from "../../utils/provider.js";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
-import { Wallet } from "ethers";
+import { chain } from "../../utils/chain.js";
+import { Wallet, formatEther } from "ethers";
 
 export const getWalletBalance = {
     name: "get_wallet_balance",
-    description: "Get the RLC balance of a wallet address using iExec SDK",
+    description: "Get the ETH (gas) and RLC balances of the configured wallet on the current Arbitrum network",
     inputSchema: {
         type: "object",
         properties: {
@@ -29,11 +30,14 @@ export const getWalletBalance = {
             const stakeRLC = Number(balance.stake) * 1e-9;
             const lockedRLC = Number(balance.locked) * 1e-9;
 
-            const { nRLC } = await iexec.wallet.checkBalances(wallet.address);
+            const { wei, nRLC } = await iexec.wallet.checkBalances(wallet.address);
+            const onChainETH = Number(formatEther(wei.toString()));
             const onChainRLC = Number(nRLC) * 1e-9;
 
             return {
                 wallet: wallet.address,
+                chain: chain.name,
+                onChainETH,
                 onChainRLC,
                 stakeRLC,
                 lockedRLC

@@ -5,6 +5,7 @@ import {
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
+import { chain, getExplorerDatasetUrl } from "../../utils/chain.js";
 
 export const getProtectedData = {
     name: "get_protected_data",
@@ -26,7 +27,7 @@ export const getProtectedData = {
         try {
             const privateKey = await readWalletPrivateKey();
             const wallet = new Wallet(privateKey);
-            const web3Provider = getWeb3Provider(privateKey);
+            const web3Provider = getWeb3Provider(privateKey, chain.name);
 
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
@@ -42,7 +43,7 @@ export const getProtectedData = {
                     schema: data.schema,
                     owner: data.owner,
                     timestamp: data.timestamp,
-                    url: `https://explorer.iex.ec/bellecour/dataset/${data.address}`,
+                    url: getExplorerDatasetUrl(data.address),
                 })),
             };
         } catch (error: any) {

@@ -4,6 +4,7 @@ import {
     IExecDataProtectorCore,
 } from "@iexec/dataprotector";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
+import { chain, getExplorerDatasetUrl } from "../../utils/chain.js";
 
 export const transferOwnership = {
     name: "transfer_ownership",
@@ -29,7 +30,7 @@ export const transferOwnership = {
 
         try {
             const privateKey = await readWalletPrivateKey();
-            const web3Provider = getWeb3Provider(privateKey);
+            const web3Provider = getWeb3Provider(privateKey, chain.name);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
             const result = await dataProtectorCore.transferOwnership({
                 protectedData,
@@ -41,7 +42,7 @@ export const transferOwnership = {
                 txHash: result.txHash,
                 protectedData: result.address,
                 newOwner: result.to,
-                explorerUrl: `https://explorer.iex.ec/bellecour/dataset/${result.address}`,
+                explorerUrl: getExplorerDatasetUrl(result.address),
             };
         } catch (error: any) {
             throw new McpError(

@@ -1,6 +1,7 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
+import { chain } from "../../utils/chain.js";
 
 export const processProtectedData = {
     name: "process_protected_data",
@@ -12,7 +13,9 @@ export const processProtectedData = {
             app: { type: "string" },           // required
 
             userWhitelist: { type: "string" },
-            maxPrice: { type: "number" },
+            dataMaxPrice: { type: "number" },
+            appMaxPrice: { type: "number" },
+            workerpoolMaxPrice: { type: "number" },
             path: { type: "string" },
             args: { type: "string" },
             inputFiles: {
@@ -24,8 +27,6 @@ export const processProtectedData = {
                 additionalProperties: { type: "string" },
             },
             workerpool: { type: "string" },
-            useVoucher: { type: "boolean" },
-            voucherOwner: { type: "string" },
         },
         required: ["protectedData", "app"],
     },
@@ -34,14 +35,14 @@ export const processProtectedData = {
             protectedData,
             app,
             userWhitelist,
-            maxPrice,
+            dataMaxPrice,
+            appMaxPrice,
+            workerpoolMaxPrice,
             path,
             args,
             inputFiles,
             secrets,
             workerpool,
-            useVoucher,
-            voucherOwner,
         } = params;
 
         if (
@@ -53,7 +54,7 @@ export const processProtectedData = {
 
         try {
             const privateKey = await readWalletPrivateKey();
-            const web3Provider = getWeb3Provider(privateKey);
+            const web3Provider = getWeb3Provider(privateKey, chain.name);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const processParams: any = {
@@ -62,20 +63,22 @@ export const processProtectedData = {
             };
 
             if (userWhitelist) processParams.userWhitelist = userWhitelist;
-            if (typeof maxPrice === "number") processParams.maxPrice = maxPrice;
+            if (typeof dataMaxPrice === "number") processParams.dataMaxPrice = dataMaxPrice;
+            if (typeof appMaxPrice === "number") processParams.appMaxPrice = appMaxPrice;
+            if (typeof workerpoolMaxPrice === "number") processParams.workerpoolMaxPrice = workerpoolMaxPrice;
             if (path) processParams.path = path;
             if (args) processParams.args = args;
             if (inputFiles) processParams.inputFiles = inputFiles;
             if (secrets) processParams.secrets = secrets;
             if (workerpool) processParams.workerpool = workerpool;
-            if (typeof useVoucher === "boolean") processParams.useVoucher = useVoucher;
-            if (voucherOwner) processParams.voucherOwner = voucherOwner;
 
             const result = await dataProtectorCore.processProtectedData(processParams);
 
             return {
                 message: "Protected data processed successfully",
                 txHash: result.txHash,
+                dealId: result.dealId,
+                taskId: result.taskId,
             };
         } catch (error: any) {
             throw new McpError(ErrorCode.InternalError, error.message);

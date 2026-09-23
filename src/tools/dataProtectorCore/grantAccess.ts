@@ -1,22 +1,7 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
-
-// Dictionnaire d'apps connues avec alias
-const iExecApps = {
-    web3mail: {
-        // ens: "web3mail.apps.iexec.eth",
-        // address: "0x0d8b899f2faa0fe9f0b17bcf4debd0cbc9e574ef",
-        whitelistAddress: "0x781482C39CcE25546583EaC4957Fb7Bf04C277D2",
-        aliases: ["web3mail", "web3 mail", "web3-mail"],
-    },
-    web3telegram: {
-        // ens: "web3telegram.apps.iexec.eth",
-        // address: "0xe997ea3284425d9ee537231d2562ff8373058b9c",
-        whitelistAddress: "0x192C6f5AccE52c81Fcc2670f10611a3665AAA98F",
-        aliases: ["web3telegram", "web3 telegram", "web3-telegram", "telegram"],
-    },
-};
+import { chain, knownApps } from "../../utils/chain.js";
 
 function isEthereumAddress(input: string) {
     return /^0x[a-fA-F0-9]{40}$/.test(input);
@@ -32,7 +17,7 @@ function resolveApp(appName: string) {
     }
 
     const normalized = normalizeAppName(appName);
-    for (const app of Object.values(iExecApps)) {
+    for (const app of Object.values(knownApps)) {
         for (const alias of app.aliases) {
             if (normalizeAppName(alias) === normalized) {
                 return app.whitelistAddress;
@@ -82,7 +67,7 @@ export const grantAccess = {
             const privateKey = await readWalletPrivateKey();
             const resolvedApp = resolveApp(authorizedApp);
             console.error("Resolved app:", resolvedApp);
-            const web3Provider = getWeb3Provider(privateKey);
+            const web3Provider = getWeb3Provider(privateKey, chain.name);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const grantOptions: {
