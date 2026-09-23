@@ -8,7 +8,7 @@
 
 **Prerequisites:**
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [Node.js](https://nodejs.org/) (version 20.18.1 or higher)
 - npm (version 9 or higher)
 
 **Option 1: Create a new wallet with iExec**
@@ -35,6 +35,26 @@ Find your wallet at:
 
 > **Important:** All sensitive configuration (PRIVATE_KEY_PATH or PRIVATE_KEY) is used only at the local MCP server level and is **never** transmitted to Claude or any other AI model. This information remains strictly confidential on your local machine.
 
+**Choose a network**
+
+The server runs on Arbitrum. Select the network with the `CHAIN` environment variable:
+
+| `CHAIN`                    | Network          | Chain ID | Use for                     |
+| -------------------------- | ---------------- | -------- | --------------------------- |
+| `arbitrum-mainnet`         | Arbitrum One     | 42161    | Production (default)        |
+| `arbitrum-sepolia-testnet` | Arbitrum Sepolia | 421614   | Testing with testnet tokens |
+
+Your wallet pays gas in **ETH** on the selected network, so fund it with ETH before running tools that send transactions (`protect_data`, `grant_access`, `revoke_access`, `transfer_ownership`, …). Processing tasks (`process_protected_data`, `sendEmail`) may also need RLC.
+
+Add `CHAIN` next to your key in any of the configurations below, for example:
+
+```json
+"env": {
+  "PRIVATE_KEY_PATH": "/ABSOLUTE/PATH/TO/YOUR/KEYSTORE/wallet.json",
+  "CHAIN": "arbitrum-sepolia-testnet"
+}
+```
+
 ## 2. Getting Started
 
 Complete the **Wallet Setup** above, then choose your preferred installation method:
@@ -53,7 +73,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 
 **Prerequisites:**
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [Node.js](https://nodejs.org/) (version 20.18.1 or higher)
 - npm (version 9 or higher)
 - [Claude Desktop](https://claude.ai/download)
 
@@ -105,7 +125,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 
 **Prerequisites:**
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [Node.js](https://nodejs.org/) (version 20.18.1 or higher)
 - npm (version 9 or higher)
 
 **Setup Steps:**
@@ -141,7 +161,7 @@ Complete the **Wallet Setup** above, then choose your preferred installation met
 
 **Prerequisites:**
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [Node.js](https://nodejs.org/) (version 20.18.1 or higher)
 - npm (version 9 or higher)
 - [Git](https://git-scm.com/)
 - [Claude Desktop](https://claude.ai/download)
@@ -266,7 +286,7 @@ npm run build
 
 **Prerequisites:**
 
-- [Node.js](https://nodejs.org/) (version 18 or higher)
+- [Node.js](https://nodejs.org/) (version 20.18.1 or higher)
 - npm (version 9 or higher)
 - [Cursor](https://cursor.sh/) IDE installed
 
@@ -360,7 +380,7 @@ Then configure Cursor to use the local build:
 - **Confidential Data:** `protectData`, `getProtectedData`, `processProtectedData`
 - **Data Governance:** `grantAccess`, `revokeOneAccess`, `revokeAllAccess`, `transferOwnership`, `getGrantedAccess`
 - **Web3Mail:** `sendEmail`, `fetchMyContacts`, `fetchUserContacts`
-- **Wallet & Resources:** `getUserVoucher`, `getWalletBalance`, `getIExecApps`
+- **Wallet & Resources:** `getWalletBalance`, `getIExecApps`
 
 > Full API docs: [`TOOLS.md`](./TOOLS.md)
 
@@ -377,7 +397,6 @@ Then configure Cursor to use the local build:
 - "Send email to `0xrecipient` with subject `Update` and message `Access approved`."
 - "List all my Web3mail contacts."
 - "What's my wallet balance on iExec?"
-- "Do I have a user voucher?"
 - "Run app `0xAPP` on protected data `0xDATA`."
 
 ---

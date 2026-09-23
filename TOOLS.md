@@ -2,13 +2,15 @@
 
 This document describes the available Model Context Protocol (MCP) tools designed to interact with iExec DataProtector and related services.
 
+All tools run on the network selected by the `CHAIN` environment variable: `arbitrum-mainnet` (default) or `arbitrum-sepolia-testnet`. Transactions are paid in ETH gas on that network.
+
 ---
 
 ## Table of Contents
 
 - [get_granted_access](#get_granted_access)
 - [get_protected_data](#get_protected_data)
-- [get_user_voucher](#get_user_voucher)
+- [get_iexec_apps](#get_iexec_apps)
 - [get_wallet_balance](#get_wallet_balance)
 - [grant_access](#grant_access)
 - [process_protected_data](#process_protected_data)
@@ -29,6 +31,9 @@ List granted access permissions for a protected dataset.
 - `protectedData` (string, optional): The address or ID of the protected data.
 - `authorizedApp` (string, optional): Filter by authorized application.
 - `authorizedUser` (string, optional): Filter by authorized user.
+- `isUserStrict` (boolean, optional): Exclude accesses granted to any user.
+- `page` (number, optional): Page index (starts at 0).
+- `pageSize` (number, optional): Page size (10 to 1000).
 
 **Output:**
 
@@ -40,12 +45,11 @@ List granted access permissions for a protected dataset.
 ## get_protected_data
 
 **Description:**  
-Retrieve protected datasets owned by a wallet, optionally filtered by schema.
+Retrieve the protected datasets owned by the configured wallet.
 
 **Inputs:**
 
-- `wallet` (string, required): Wallet address owner of the protected data.
-- `requiredSchema` (object, optional): Schema to filter the datasets.
+None.
 
 **Output:**
 
@@ -54,34 +58,36 @@ Retrieve protected datasets owned by a wallet, optionally filtered by schema.
 
 ---
 
-## get_user_voucher
+## get_iexec_apps
 
 **Description:**  
-Get voucher information related to a user wallet, including balance, expiration, sponsors, and authorized accounts.
+Get the whitelist address of a known iExec app (`web3mail`, `web3telegram`) on the configured network. Use this address as `authorizedApp` in `grant_access`.
 
 **Inputs:**
 
-- `wallet` (string, required): Wallet address to query.
+- `query` (string, optional): App name or alias. Returns all known apps if omitted.
 
 **Output:**
 
-- Voucher details: balance, expirationTimestamp, sponsoredApps, sponsoredDatasets, sponsoredWorkerpools, allowanceAmount, authorizedAccounts.
-- If no voucher found, returns a message with a link to claim a voucher.
+- `chain` (string): Configured network.
+- `appName`, `whitelistAddress`, `aliases` for the matching app, or `knownApps` (array) if no query or no match.
 
 ---
 
 ## get_wallet_balance
 
 **Description:**  
-Retrieve RLC token balances of a wallet, including on-chain balance, stake, and locked amounts.
+Retrieve the ETH (gas) and RLC balances of the configured wallet, including RLC stake and locked amounts in the iExec account.
 
 **Inputs:**
 
-- `wallet` (string, required): Wallet address.
+None.
 
 **Output:**
 
 - `wallet` (string): Wallet address.
+- `chain` (string): Configured network.
+- `onChainETH` (number): ETH balance, used to pay gas.
 - `onChainRLC` (number): Available RLC balance.
 - `stakeRLC` (number): Staked RLC balance.
 - `lockedRLC` (number): Locked RLC balance.
@@ -96,7 +102,7 @@ Grant access permissions to a protected dataset for a specific app and user.
 **Inputs:**
 
 - `protectedData` (string, required): Address or ID of the protected data.
-- `authorizedApp` (string, required): Application to authorize (name or Ethereum address).
+- `authorizedApp` (string, required): Application to authorize: an Ethereum address, or a known app name (`web3mail`, `web3telegram`), which resolves to that app's whitelist on the configured network.
 - `authorizedUser` (string, required): User to authorize.
 - `pricePerAccess` (number, optional): Price per access permission.
 - `numberOfAccess` (number, optional): Number of accesses allowed.
@@ -118,19 +124,19 @@ Process a protected dataset using iExec confidential computing features.
 - `protectedData` (string, required): Dataset to process.
 - `app` (string, required): Application to process the data.
 - `userWhitelist` (string, optional): Whitelist of users allowed to use the process.
-- `maxPrice` (number, optional): Maximum price allowed for the process.
+- `dataMaxPrice` (number, optional): Maximum price (nRLC) for the dataset order.
+- `appMaxPrice` (number, optional): Maximum price (nRLC) for the app order.
+- `workerpoolMaxPrice` (number, optional): Maximum price (nRLC) for the workerpool order.
 - `path` (string, optional): Path of the executable or script to run.
 - `args` (string, optional): Arguments for the executable.
 - `inputFiles` (array of strings, optional): Input files for the process.
 - `secrets` (object, optional): Secrets to inject.
-- `workerpool` (string, optional): Workerpool to use.
-- `useVoucher` (boolean, optional): Whether to use a voucher.
-- `voucherOwner` (string, optional): Voucher owner address.
+- `workerpool` (string, optional): Workerpool to use (defaults to the iExec production workerpool).
 
 **Output:**
 
 - Confirmation message.
-- Transaction hash of the processing job.
+- `txHash`, `dealId` and `taskId` of the processing job.
 
 ---
 
@@ -143,8 +149,6 @@ Protect any JSON-compatible data by encrypting and storing it as an NFT using iE
 
 - `data` (object, required): JSON object to protect.
 - `name` (string, optional): Public name for the protected data.
-- `wallet` (string, optional): Destination wallet for transferring ownership.
-- `allowDebug` (boolean, optional): Enable debug mode.
 
 **Output:**
 

@@ -1,5 +1,6 @@
 import { IExec, utils } from "iexec";
-import { Provider, Wallet } from "ethers";
+import { Wallet } from "ethers";
+import { chain } from "./chain.js";
 
 export interface IExecProviderResponse {
     iexec: IExec;
@@ -8,7 +9,7 @@ export interface IExecProviderResponse {
 export const getIexecProvider = (): any => {
     try {
         const randomPrivateKey = Wallet.createRandom().privateKey;
-        const ethProvider = utils.getSignerFromPrivateKey("bellecour", randomPrivateKey);
+        const ethProvider = utils.getSignerFromPrivateKey(chain.name, randomPrivateKey);
         const iexec = new IExec({ ethProvider });
         return { success: true, data: { iexec } };
     } catch (error) {

@@ -1,6 +1,7 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { getWeb3Provider, IExecDataProtectorCore } from "@iexec/dataprotector";
 import { readWalletPrivateKey } from "../../utils/readWalletKeystore.js";
+import { chain } from "../../utils/chain.js";
 
 export const revokeOneAccess = {
     name: "revoke_access",
@@ -30,7 +31,7 @@ export const revokeOneAccess = {
 
         try {
             const privateKey = await readWalletPrivateKey();
-            const web3Provider = getWeb3Provider(privateKey);
+            const web3Provider = getWeb3Provider(privateKey, chain.name);
             const dataProtectorCore = new IExecDataProtectorCore(web3Provider);
 
             const { grantedAccess } = await dataProtectorCore.getGrantedAccess({

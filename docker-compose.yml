@@ -8,6 +8,7 @@ services:
     environment:
       - REMOTE=${REMOTE}
       - PORT=${PORT}
+      - CHAIN=${CHAIN:-arbitrum-mainnet}
       - PRIVATE_KEY=${PRIVATE_KEY}
       - PRIVATE_KEY_PATH=${PRIVATE_KEY_PATH}
     volumes:
